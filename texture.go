@@ -1,10 +1,10 @@
 package gfx
 
 import (
-	"bufio"
-	"fmt"
-	"image"
 	"os"
+	"fmt"
+	"bufio"
+	"image"
 	_ "image/png"
 )
 

@@ -1,8 +1,8 @@
 package gfx
 
 import (
-	"github.com/faiface/glhf"
 	"github.com/tadeuszjt/geom"
+	"github.com/faiface/glhf"
 )
 
 type Colour struct {
