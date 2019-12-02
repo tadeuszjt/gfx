@@ -1,18 +1,20 @@
 package gfx
 
 import (
-	"github.com/tadeuszjt/geom"
+	"fmt"
 )
 
 type WinConfig struct {
 	Title         string
 	Width, Height int
+	Resisable     bool
+	SetupFunc     func(*Win) error
 	DrawFunc      func(*WinDraw)
+	CloseFunc     func()
 }
 
 func defaultDraw(w *WinDraw) {
 	w.Clear(1, 1, 1, 1)
-	w.DrawRect(geom.Rect{})
 }
 
 func (c *WinConfig) loadDefaults() {
@@ -30,5 +32,15 @@ func (c *WinConfig) loadDefaults() {
 
 	if c.DrawFunc == nil {
 		c.DrawFunc = defaultDraw
+	}
+	
+	if c.SetupFunc == nil {
+		c.SetupFunc = func(*Win) error { return nil }
+	}
+	
+	if c.CloseFunc == nil {
+		c.CloseFunc = func() {
+			fmt.Println("gfx goodbye")
+		}
 	}
 }
