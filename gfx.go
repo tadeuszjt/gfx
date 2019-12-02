@@ -71,8 +71,6 @@ func run() {
 		slice = glhf.MakeVertexSlice(shader, 0, 0)
 	})
 	
-	fmt.Println(win, slice, shader)
-	
 	shouldQuit := false
 	for !shouldQuit {
 		mainthread.Call(func() {

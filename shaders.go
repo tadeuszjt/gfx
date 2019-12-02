@@ -18,21 +18,26 @@ var shader2D = GLShader{
 uniform mat3 matrix;
 in vec2 position;
 in vec2 texCoord;
+in vec4 colour;
 out vec2 TexCoord;
+out vec4 Colour;
 void main() {
 	gl_Position = vec4(matrix * vec3(position, 1), 1.0);
 	TexCoord = texCoord;
+	Colour = colour;
 }`,
 	`#version 330 core
 uniform sampler2D tex;
 in vec2 TexCoord;
+in vec4 Colour;
 out vec4 outColor;
 void main() {
-	outColor = texture(tex, TexCoord);
+	outColor = Colour * texture(tex, TexCoord);
 }`,
 	glhf.AttrFormat {
 		{Name: "position", Type: glhf.Vec2},
 		{Name: "texCoord", Type: glhf.Vec2},
+		{Name: "colour", Type: glhf.Vec4},
 	},
 	glhf.AttrFormat {{Name: "matrix", Type: glhf.Mat3}},
 }
