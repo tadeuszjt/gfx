@@ -17,11 +17,7 @@ var (
 func setup(w *gfx.Win) error {
 	var err error
 	texID, err = w.LoadTexture("dog.png")
-	if  err != nil {
-		return err
-	}
-	
-	return nil
+	return err
 }
 
 func draw(w *gfx.WinDraw) {
