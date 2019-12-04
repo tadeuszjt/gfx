@@ -3,10 +3,12 @@ package gfx
 import (
 	"github.com/faiface/glhf"
 	"github.com/go-gl/gl/v3.3-core/gl"
+	"github.com/go-gl/glfw/v3.2/glfw"
 )
 
 type Win struct {
 	textures []*glhf.Texture
+	glfwWin  *glfw.Window
 }
 
 type TexID int
@@ -26,7 +28,7 @@ func (w *Win) LoadTexture(path string) (TexID, error) {
 	if err != nil {
 		return 0, err
 	}
-	
+
 	/* generate mipmap */
 	id := w.loadTextureFromPixels(width, height, pixels)
 	tex := w.textures[id]
@@ -34,6 +36,6 @@ func (w *Win) LoadTexture(path string) (TexID, error) {
 	gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR)
 	gl.GenerateMipmap(gl.TEXTURE_2D)
 	tex.End()
-	
-	return id, nil;
+
+	return id, nil
 }

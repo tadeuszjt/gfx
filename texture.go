@@ -1,17 +1,17 @@
 package gfx
 
 import (
-	"os"
-	"fmt"
 	"bufio"
+	"fmt"
 	"image"
 	_ "image/png"
+	"os"
 )
 
 func loadImage(path string) (int, int, []uint8, error) {
 	file, err := os.Open(path)
 	defer file.Close()
-	
+
 	if err != nil {
 		return 0, 0, nil, err
 	}
@@ -20,7 +20,7 @@ func loadImage(path string) (int, int, []uint8, error) {
 	if err != nil {
 		return 0, 0, nil, err
 	}
-	
+
 	size := img.Bounds().Size()
 
 	switch trueim := img.(type) {
@@ -29,7 +29,6 @@ func loadImage(path string) (int, int, []uint8, error) {
 	case *image.NRGBA:
 		return size.X, size.Y, trueim.Pix, nil
 	}
-	
+
 	return 0, 0, nil, fmt.Errorf("unhandled image format")
 }
-

@@ -7,7 +7,7 @@ import (
 type WinConfig struct {
 	Title         string
 	Width, Height int
-	Resisable     bool
+	Resizable     bool
 	SetupFunc     func(*Win) error
 	DrawFunc      func(*WinDraw)
 	CloseFunc     func()
@@ -33,11 +33,11 @@ func (c *WinConfig) loadDefaults() {
 	if c.DrawFunc == nil {
 		c.DrawFunc = defaultDraw
 	}
-	
+
 	if c.SetupFunc == nil {
 		c.SetupFunc = func(*Win) error { return nil }
 	}
-	
+
 	if c.CloseFunc == nil {
 		c.CloseFunc = func() {
 			fmt.Println("gfx goodbye")

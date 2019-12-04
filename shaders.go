@@ -34,10 +34,10 @@ out vec4 outColor;
 void main() {
 	outColor = Colour * texture(tex, TexCoord);
 }`,
-	glhf.AttrFormat {
+	glhf.AttrFormat{
 		{Name: "position", Type: glhf.Vec2},
 		{Name: "texCoord", Type: glhf.Vec2},
 		{Name: "colour", Type: glhf.Vec4},
 	},
-	glhf.AttrFormat {{Name: "matrix", Type: glhf.Mat3}},
+	glhf.AttrFormat{{Name: "matrix", Type: glhf.Mat3}},
 }
