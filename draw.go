@@ -29,6 +29,18 @@ func (w *WinDraw) Clear(r, g, b, a float32) {
 	glhf.Clear(r, g, b, a)
 }
 
+func (w *WinDraw) DrawVertexData(data []float32, texID *TexID) {
+	tex := TexID(0)
+	if texID != nil {
+		tex = *texID
+	}
+
+	w.setActiveTexture(tex)
+	w.slice.SetLen(len(data) / 8)
+	w.slice.SetVertexData(data)
+	w.slice.Draw()
+}
+
 func (w *WinDraw) DrawRect(r geom.Rect, texID *TexID, colour *Colour) {
 	col := Colour{1, 1, 1, 1}
 	if colour != nil {
@@ -54,7 +66,7 @@ func (w *WinDraw) DrawRect(r geom.Rect, texID *TexID, colour *Colour) {
 		)
 	}
 
-	w.DrawData(data, texID)
+	w.DrawVertexData(data, texID)
 }
 
 func (w *WinDraw) DrawRects(rects []geom.Rect, orientations []geom.Ori2, texID *TexID, colour *Colour) {
@@ -86,19 +98,7 @@ func (w *WinDraw) DrawRects(rects []geom.Rect, orientations []geom.Ori2, texID *
 		}
 	}
 
-	w.DrawData(data, texID)
-}
-
-func (w *WinDraw) DrawData(data []float32, texID *TexID) {
-	tex := TexID(0)
-	if texID != nil {
-		tex = *texID
-	}
-
-	w.setActiveTexture(tex)
-	w.slice.SetLen(len(data) / 8)
-	w.slice.SetVertexData(data)
-	w.slice.Draw()
+	w.DrawVertexData(data, texID)
 }
 
 func (w *WinDraw) GetFrameSize() geom.Vec2 {
@@ -114,7 +114,7 @@ func (w *WinDraw) SetMatrix(m geom.Mat3) {
 		geom.RectCentered(2, -2, geom.Vec2{0, 0}),
 	)
 
-	m = m.Product(worldToGL)
+	m = worldToGL.Product(m)
 
 	w.shader.SetUniformAttr(0, mgl32.Mat3{
 		m[0], m[3], m[6],

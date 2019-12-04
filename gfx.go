@@ -58,20 +58,28 @@ func run() {
 		win    = Win{glfwWin: glfwWin}
 		slice  *glhf.VertexSlice
 		shader *glhf.Shader
+		err    error
 	)
 
 	mainthread.Call(func() {
-		var err error
 		shader, err = newShader(&shader2D)
 		if err != nil {
-			panic(err)
+			return
 		}
 
 		win.loadWhiteTex()
-		winConfig.SetupFunc(&win)
+		err = winConfig.SetupFunc(&win)
+		if err != nil {
+			return
+		}
 
 		slice = glhf.MakeVertexSlice(shader, 0, 0)
 	})
+	
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Gfx Error:", err)
+		return
+	}
 
 	shouldQuit := false
 	for !shouldQuit {
