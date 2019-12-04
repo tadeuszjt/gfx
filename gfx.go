@@ -3,13 +3,10 @@ package gfx
 import (
 	"os"
 	"fmt"
-	"github.com/tadeuszjt/geom"
 	"github.com/faiface/glhf"
 	"github.com/faiface/mainthread"
 	"github.com/go-gl/gl/v3.3-core/gl"
-	"github.com/go-gl/glfw/v3.2/glfw"
-	"github.com/go-gl/mathgl/mgl32"
-)
+	"github.com/go-gl/glfw/v3.2/glfw")
 
 var (
 	winConfig WinConfig
@@ -77,18 +74,11 @@ func run() {
 			if glfwWin.ShouldClose() {
 				shouldQuit = true
 			}
-
-			shader.Begin()
-			shader.SetUniformAttr(0, Mat3GeomToMgl32(geom.Mat3{
-				1, 0, 0,
-				0, -1, 0,
-				0, 0, 1,
-			}))
-			slice.Begin()
-			glhf.Clear(1, 1, 1, 1)
-			winConfig.DrawFunc(&WinDraw{window: &win, slice: slice})
-			slice.End()
-			shader.End()
+			
+			winDraw := makeWinDraw(slice, shader, &win)
+			winDraw.begin()
+			winConfig.DrawFunc(&winDraw)
+			winDraw.end()
 
 			glfwWin.SwapBuffers()
 			glfw.PollEvents()
@@ -102,13 +92,4 @@ func RunWindow(config WinConfig) {
 	winConfig = config
 	winConfig.loadDefaults()
 	mainthread.Run(run)
-}
-
-
-func Mat3GeomToMgl32(m geom.Mat3) mgl32.Mat3 {
-	return mgl32.Mat3{
-		float32(m[0]), float32(m[3]), float32(m[6]),
-		float32(m[1]), float32(m[4]), float32(m[7]),
-		float32(m[2]), float32(m[5]), float32(m[8]),
-	}
 }

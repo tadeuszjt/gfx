@@ -6,14 +6,13 @@ import (
 )
 
 type Win struct {
-	whiteTex *glhf.Texture
 	textures []*glhf.Texture
 }
 
 type TexID int
 
 func (w *Win) loadWhiteTex() {
-	w.whiteTex = glhf.NewTexture(1, 1, false, []uint8{255, 255, 255, 255})
+	w.textures = append(w.textures, glhf.NewTexture(1, 1, false, []uint8{255, 255, 255, 255}))
 }
 
 func (w *Win) loadTextureFromPixels(width, height int, pixels []uint8) TexID {
