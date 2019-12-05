@@ -13,10 +13,6 @@ type WinConfig struct {
 	CloseFunc     func()
 }
 
-func defaultDraw(w *WinDraw) {
-	w.Clear(1, 1, 1, 1)
-}
-
 func (c *WinConfig) loadDefaults() {
 	if c.Title == "" {
 		c.Title = "Gfx"
@@ -31,7 +27,7 @@ func (c *WinConfig) loadDefaults() {
 	}
 
 	if c.DrawFunc == nil {
-		c.DrawFunc = defaultDraw
+		c.DrawFunc = func(w *WinDraw) { w.Clear(1, 1, 1, 1) }
 	}
 
 	if c.SetupFunc == nil {
@@ -39,8 +35,6 @@ func (c *WinConfig) loadDefaults() {
 	}
 
 	if c.CloseFunc == nil {
-		c.CloseFunc = func() {
-			fmt.Println("gfx goodbye")
-		}
+		c.CloseFunc = func() { fmt.Println("gfx goodbye") }
 	}
 }
