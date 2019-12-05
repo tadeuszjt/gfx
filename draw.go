@@ -17,14 +17,6 @@ type WinDraw struct {
 	activeTexture *glhf.Texture
 }
 
-func makeWinDraw(slice *glhf.VertexSlice, shader *glhf.Shader, window *Win) WinDraw {
-	return WinDraw{
-		slice:  slice,
-		shader: shader,
-		window: window,
-	}
-}
-
 func (w *WinDraw) Clear(r, g, b, a float32) {
 	glhf.Clear(r, g, b, a)
 }
@@ -102,8 +94,7 @@ func (w *WinDraw) DrawRects(rects []geom.Rect, orientations []geom.Ori2, texID *
 }
 
 func (w *WinDraw) GetFrameSize() geom.Vec2 {
-	width, height := w.window.glfwWin.GetFramebufferSize()
-	return geom.Vec2{float32(width), float32(height)}
+	return w.window.GetFrameSize()
 }
 
 func (w *WinDraw) SetMatrix(m geom.Mat3) {
@@ -121,6 +112,14 @@ func (w *WinDraw) SetMatrix(m geom.Mat3) {
 		m[1], m[4], m[7],
 		m[2], m[5], m[8],
 	})
+}
+
+func makeWinDraw(slice *glhf.VertexSlice, shader *glhf.Shader, window *Win) WinDraw {
+	return WinDraw{
+		slice:  slice,
+		shader: shader,
+		window: window,
+	}
 }
 
 func (w *WinDraw) setActiveTexture(tex TexID) {

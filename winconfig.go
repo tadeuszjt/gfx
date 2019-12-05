@@ -11,6 +11,8 @@ type WinConfig struct {
 	SetupFunc     func(*Win) error
 	DrawFunc      func(*WinDraw)
 	CloseFunc     func()
+	MouseFunc     func(*Win, MouseEvent)
+	ResizeFunc    func(width, height int)
 }
 
 func (c *WinConfig) loadDefaults() {
@@ -36,5 +38,13 @@ func (c *WinConfig) loadDefaults() {
 
 	if c.CloseFunc == nil {
 		c.CloseFunc = func() { fmt.Println("gfx goodbye") }
+	}
+	
+	if c.MouseFunc == nil {
+		c.MouseFunc = func(*Win, MouseEvent) {}
+	}
+	
+	if c.ResizeFunc == nil {
+		c.ResizeFunc = func(int, int) { }
 	}
 }

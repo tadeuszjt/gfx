@@ -6,8 +6,15 @@ import (
 	"github.com/faiface/mainthread"
 	"github.com/go-gl/gl/v3.3-core/gl"
 	"github.com/go-gl/glfw/v3.2/glfw"
+	"github.com/tadeuszjt/geom/geom32"
 	"os"
 )
+
+func RunWindow(config WinConfig) {
+	winConfig = config
+	winConfig.loadDefaults()
+	mainthread.Run(run)
+}
 
 var (
 	winConfig WinConfig
@@ -46,8 +53,10 @@ func run() {
 		glhf.Init()
 
 		glfwWin.MakeContextCurrent()
+		
 		glfwWin.SetFramebufferSizeCallback(func(w *glfw.Window, width, height int) {
 			gl.Viewport(0, 0, int32(width), int32(height))
+			winConfig.ResizeFunc(width, height)
 		})
 
 		gl.Enable(gl.BLEND)
@@ -72,8 +81,28 @@ func run() {
 		if err != nil {
 			return
 		}
+		
+		glfwWin.SetCursorPosCallback(func(w *glfw.Window, xpos, ypos float64) {
+			winConfig.MouseFunc(&win, MouseMove{geom.Vec2{float32(xpos), float32(ypos)}})
+		})
+		
+		glfwWin.SetScrollCallback(func(w *glfw.Window, dx, dy float64) {
+			winConfig.MouseFunc(&win, MouseScroll{float32(dx), float32(dy)})
+		})
+		
+		glfwWin.SetMouseButtonCallback(func(
+			w *glfw.Window, 
+			button glfw.MouseButton,
+			action glfw.Action,
+			mods glfw.ModifierKey,
+		) {
+			winConfig.MouseFunc(&win, MouseButton{})
+		})
 
 		slice = glhf.MakeVertexSlice(shader, 0, 0)
+		
+		size := win.GetFrameSize()
+		winConfig.ResizeFunc(int(size.X), int(size.Y))
 	})
 	
 	if err != nil {
@@ -99,10 +128,4 @@ func run() {
 	}
 
 	winConfig.CloseFunc()
-}
-
-func RunWindow(config WinConfig) {
-	winConfig = config
-	winConfig.loadDefaults()
-	mainthread.Run(run)
 }
