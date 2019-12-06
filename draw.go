@@ -19,10 +19,14 @@ func (w *WinDraw) Clear(r, g, b, a float32) {
 	glhf.Clear(r, g, b, a)
 }
 
-func (w *WinDraw) DrawVertexData(data []float32, texID *TexID) {
+func (w *WinDraw) DrawVertexData(data []float32, texID *TexID, mat *geom.Mat3) {
 	tex := TexID(0)
 	if texID != nil {
 		tex = *texID
+	}
+	
+	if mat != nil {
+		w.setMatrix(*mat)
 	}
 
 	w.setActiveTexture(tex)
@@ -31,7 +35,7 @@ func (w *WinDraw) DrawVertexData(data []float32, texID *TexID) {
 	w.window.slice.Draw()
 }
 
-func (w *WinDraw) DrawRect(r geom.Rect, texID *TexID, colour *Colour) {
+func (w *WinDraw) DrawRect(r geom.Rect, texID *TexID, colour *Colour, mat *geom.Mat3) {
 	col := Colour{1, 1, 1, 1}
 	if colour != nil {
 		col = *colour
@@ -56,46 +60,14 @@ func (w *WinDraw) DrawRect(r geom.Rect, texID *TexID, colour *Colour) {
 		)
 	}
 
-	w.DrawVertexData(data, texID)
-}
-
-func (w *WinDraw) DrawRects(rects []geom.Rect, orientations []geom.Ori2, texID *TexID, colour *Colour) {
-	col := Colour{1, 1, 1, 1}
-	if colour != nil {
-		col = *colour
-	}
-
-	data := make([]float32, 0, 6*8*len(rects))
-	texCoords := [4]geom.Vec2{{0, 0}, {1, 0}, {1, 1}, {0, 1}}
-
-	for i, rect := range rects {
-		pos := orientations[i].Vec2()
-		theta := orientations[i].Theta
-
-		verts := [4]geom.Vec2{
-			rect.Min.RotatedBy(theta).Plus(pos),
-			geom.Vec2{rect.Max.X, rect.Min.Y}.RotatedBy(theta).Plus(pos),
-			rect.Max.RotatedBy(theta).Plus(pos),
-			geom.Vec2{rect.Min.X, rect.Max.Y}.RotatedBy(theta).Plus(pos),
-		}
-
-		for _, j := range []int{0, 1, 2, 0, 2, 3} {
-			data = append(data,
-				verts[j].X, verts[j].Y,
-				texCoords[j].X, texCoords[j].Y,
-				col.R, col.G, col.B, col.A,
-			)
-		}
-	}
-
-	w.DrawVertexData(data, texID)
+	w.DrawVertexData(data, texID, mat)
 }
 
 func (w *WinDraw) GetFrameSize() geom.Vec2 {
 	return w.window.GetFrameSize()
 }
 
-func (w *WinDraw) SetMatrix(m geom.Mat3) {
+func (w *WinDraw) setMatrix(m geom.Mat3) {
 	frameSize := w.GetFrameSize()
 
 	worldToGL := geom.Mat3Camera2D(
@@ -126,7 +98,7 @@ func (w *WinDraw) setActiveTexture(tex TexID) {
 func (w *WinDraw) begin() {
 	w.window.slice.Begin()
 	w.window.shader.Begin()
-	w.SetMatrix(geom.Mat3Identity())
+	w.setMatrix(geom.Mat3Identity())
 	glhf.Clear(1, 1, 1, 1)
 }
 
