@@ -39,10 +39,6 @@ func (w *Win) LoadTexture(path string) (TexID, error) {
 	return id, nil
 }
 
-func (w *Win) loadWhiteTex() {
-	w.textures = append(w.textures, glhf.NewTexture(1, 1, false, []uint8{255, 255, 255, 255}))
-}
-
 func (w *Win) loadTextureFromPixels(width, height int, pixels []uint8) TexID {
 	tex := glhf.NewTexture(width, height, true, pixels)
 	w.textures = append(w.textures, tex)
