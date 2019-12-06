@@ -12,8 +12,6 @@ type Colour struct {
 
 type WinDraw struct {
 	window        *Win
-	slice         *glhf.VertexSlice
-	shader        *glhf.Shader
 	activeTexture *glhf.Texture
 }
 
@@ -28,9 +26,9 @@ func (w *WinDraw) DrawVertexData(data []float32, texID *TexID) {
 	}
 
 	w.setActiveTexture(tex)
-	w.slice.SetLen(len(data) / 8)
-	w.slice.SetVertexData(data)
-	w.slice.Draw()
+	w.window.slice.SetLen(len(data) / 8)
+	w.window.slice.SetVertexData(data)
+	w.window.slice.Draw()
 }
 
 func (w *WinDraw) DrawRect(r geom.Rect, texID *TexID, colour *Colour) {
@@ -102,24 +100,16 @@ func (w *WinDraw) SetMatrix(m geom.Mat3) {
 
 	worldToGL := geom.Mat3Camera2D(
 		geom.RectOrigin(frameSize.X, frameSize.Y),
-		geom.RectCentered(2, -2, geom.Vec2{0, 0}),
+		geom.RectCentred(2, -2),
 	)
 
 	m = worldToGL.Product(m)
 
-	w.shader.SetUniformAttr(0, mgl32.Mat3{
+	w.window.shader.SetUniformAttr(0, mgl32.Mat3{
 		m[0], m[3], m[6],
 		m[1], m[4], m[7],
 		m[2], m[5], m[8],
 	})
-}
-
-func makeWinDraw(slice *glhf.VertexSlice, shader *glhf.Shader, window *Win) WinDraw {
-	return WinDraw{
-		slice:  slice,
-		shader: shader,
-		window: window,
-	}
 }
 
 func (w *WinDraw) setActiveTexture(tex TexID) {
@@ -134,17 +124,15 @@ func (w *WinDraw) setActiveTexture(tex TexID) {
 }
 
 func (w *WinDraw) begin() {
-	w.slice.Begin()
-	w.shader.Begin()
-
-	w.shader.Begin()
+	w.window.slice.Begin()
+	w.window.shader.Begin()
 	w.SetMatrix(geom.Mat3Identity())
 	glhf.Clear(1, 1, 1, 1)
 }
 
 func (w *WinDraw) end() {
-	w.slice.End()
-	w.shader.End()
+	w.window.slice.End()
+	w.window.shader.End()
 
 	if w.activeTexture != nil {
 		w.activeTexture.End()

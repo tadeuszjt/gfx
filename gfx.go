@@ -25,7 +25,7 @@ func run() {
 		glfw.Terminate()
 	}()
 
-	var glfwWin *glfw.Window
+	var win Win
 
 	mainthread.Call(func() {
 		glfw.Init()
@@ -40,8 +40,7 @@ func run() {
 		glfw.WindowHint(glfw.OpenGLProfile, glfw.OpenGLCoreProfile)
 		glfw.WindowHint(glfw.OpenGLForwardCompatible, glfw.True)
 
-		var err error
-		glfwWin, err = glfw.CreateWindow(
+		glfwWin, err := glfw.CreateWindow(
 			winConfig.Width, winConfig.Height, winConfig.Title, nil, nil,
 		)
 
@@ -61,17 +60,16 @@ func run() {
 
 		gl.Enable(gl.BLEND)
 		glhf.BlendFunc(glhf.SrcAlpha, glhf.OneMinusSrcAlpha)
+		
+		win.glfwWin = glfwWin
 	})
 
 	var (
-		win    = Win{glfwWin: glfwWin}
-		slice  *glhf.VertexSlice
-		shader *glhf.Shader
-		err    error
+		err error
 	)
 
 	mainthread.Call(func() {
-		shader, err = newShader(&shader2D)
+		win.shader, err = newShader(&shader2D)
 		if err != nil {
 			return
 		}
@@ -82,15 +80,15 @@ func run() {
 			return
 		}
 		
-		glfwWin.SetCursorPosCallback(func(w *glfw.Window, xpos, ypos float64) {
+		win.glfwWin.SetCursorPosCallback(func(w *glfw.Window, xpos, ypos float64) {
 			winConfig.MouseFunc(&win, MouseMove{geom.Vec2{float32(xpos), float32(ypos)}})
 		})
 		
-		glfwWin.SetScrollCallback(func(w *glfw.Window, dx, dy float64) {
+		win.glfwWin.SetScrollCallback(func(w *glfw.Window, dx, dy float64) {
 			winConfig.MouseFunc(&win, MouseScroll{float32(dx), float32(dy)})
 		})
 		
-		glfwWin.SetMouseButtonCallback(func(
+		win.glfwWin.SetMouseButtonCallback(func(
 			w *glfw.Window, 
 			button glfw.MouseButton,
 			action glfw.Action,
@@ -99,7 +97,7 @@ func run() {
 			winConfig.MouseFunc(&win, MouseButton{})
 		})
 
-		slice = glhf.MakeVertexSlice(shader, 0, 0)
+		win.slice = glhf.MakeVertexSlice(win.shader, 0, 0)
 		
 		size := win.GetFrameSize()
 		winConfig.ResizeFunc(int(size.X), int(size.Y))
@@ -113,16 +111,16 @@ func run() {
 	shouldQuit := false
 	for !shouldQuit {
 		mainthread.Call(func() {
-			if glfwWin.ShouldClose() {
+			if win.glfwWin.ShouldClose() {
 				shouldQuit = true
 			}
 
-			winDraw := makeWinDraw(slice, shader, &win)
+			winDraw := WinDraw{window: &win}
 			winDraw.begin()
 			winConfig.DrawFunc(&winDraw)
 			winDraw.end()
 
-			glfwWin.SwapBuffers()
+			win.glfwWin.SwapBuffers()
 			glfw.PollEvents()
 		})
 	}

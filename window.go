@@ -11,6 +11,8 @@ type TexID int
 
 type Win struct {
 	glfwWin  *glfw.Window
+	slice    *glhf.VertexSlice
+	shader   *glhf.Shader
 	textures []*glhf.Texture
 }
 
