@@ -50,12 +50,12 @@ func run() {
 	}
 
 	mainthread.Call(func() {
+		win.textInit()
+		
 		err = win.setup(winConfig)
 		if err != nil {
 			return
 		}
-
-		win.textInit()
 
 		size := win.GetFrameSize()
 		winConfig.ResizeFunc(int(size.X), int(size.Y))

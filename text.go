@@ -20,13 +20,15 @@ var (
 	trueTypeFont *truetype.Font
 )
 
-func (w *Win) textInit() {
+func init() {
 	var err error
 	trueTypeFont, err = truetype.Parse(goregular.TTF)
 	if err != nil {
 		panic(err)
 	}
+}
 
+func (w *Win) textInit() {
 	textTexID = w.loadTextureFromPixels(
 		textTexWidth,
 		textTexHeight,
@@ -34,46 +36,61 @@ func (w *Win) textInit() {
 		image.NewRGBA(image.Rect(0, 0, textTexWidth, textTexHeight)).Pix)
 }
 
-func (w *WinDraw) DrawText(str string, pos geom.Vec2, size float64) {
-	w.setActiveTexture(textTexID)
+type Text struct {
+	str   string
+	size  float64
+	w, h  int
+	face  font.Face
+	img   *image.RGBA
+}
 
-	trueTypeFace := truetype.NewFace(trueTypeFont, &truetype.Options{
+func (t *Text) SetString(str string) {
+	t.str = str
+	
+	if t.face == nil {
+		t.size = 12
+		t.face = truetype.NewFace(trueTypeFont, &truetype.Options{
+			Size:    12,
+			DPI:     textDPI,
+			Hinting: font.HintingNone,
+		})
+	}
+	
+	bounds, _ := font.BoundString(t.face, t.str)
+	t.w, t.h = bounds.Max.X.Ceil(), (-bounds.Min.Y).Ceil() + int(t.size * 0.4)
+	t.img = image.NewRGBA(image.Rect(0, 0, t.w, t.h))
+	
+	d := &font.Drawer{
+		Dst:  t.img,
+		Src:  image.Black,
+		Face: t.face,
+		Dot:  fixed.Point26_6{X: -bounds.Min.X, Y: -bounds.Min.Y},
+	}
+	d.DrawString(t.str)
+}
+
+func (t *Text) SetSize(size float64) {
+	t.size = size
+	t.face = truetype.NewFace(trueTypeFont, &truetype.Options{
 		Size:    size,
 		DPI:     textDPI,
 		Hinting: font.HintingNone,
 	})
+	
+	t.SetString(t.str)
+}
 
-	bounds, _ := font.BoundString(trueTypeFace, str)
-	strW, strH := bounds.Max.X.Ceil(), (-bounds.Min.Y).Ceil() + int(size * 0.4)
-
-	img := image.NewRGBA(image.Rect(0, 0, strW, strH))
-	d := &font.Drawer{
-		Dst:  img,
-		Src:  image.Black,
-		Face: trueTypeFace,
-		Dot:  fixed.Point26_6{X: -bounds.Min.X, Y: -bounds.Min.Y},
+func (w *WinDraw) DrawText(text *Text, pos geom.Vec2) {
+	if text.img == nil {
+		return
 	}
-	d.DrawString(str)
+	
+	w.setActiveTexture(textTexID)
+	w.activeTexture.SetPixels(0, 0, text.w, text.h, text.img.Pix)
 
-	w.activeTexture.SetPixels(0, 0, strW, strH, img.Pix)
-
-	W, H := float32(strW), float32(strH)
-	TW, TH := float32(textTexWidth), float32(textTexHeight)
-
+	W, H := float32(text.w), float32(text.h)
 	strRect := geom.MakeRect(W, H, pos)
-	texRect := geom.RectOrigin(W/TW, H/TH)
+	texRect := geom.RectOrigin(W/textTexWidth, H/textTexHeight)
 
-	verts := strRect.Verts()
-	texCoords := texRect.Verts()
-
-	data := make([]float32, 0, 8*6)
-
-	for _, i := range []int{0, 1, 2, 0, 2, 3} {
-		data = append(data,
-			verts[i].X, verts[i].Y,
-			texCoords[i].X, texCoords[i].Y,
-			1, 1, 1, 1)
-	}
-
-	w.DrawVertexData(data, &textTexID, nil)
+	w.DrawRect(strRect, &textTexID, nil, nil, &texRect)
 }

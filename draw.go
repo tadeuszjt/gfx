@@ -37,19 +37,30 @@ func (w *WinDraw) DrawVertexData(data []float32, texID *TexID, mat *geom.Mat3) {
 	w.window.slice.Draw()
 }
 
-func (w *WinDraw) DrawRect(r geom.Rect, texID *TexID, colour *Colour, mat *geom.Mat3) {
+func (w *WinDraw) DrawRect(
+	rect    geom.Rect,
+	texID   *TexID,
+	colour  *Colour,
+	mat     *geom.Mat3,
+	texRect *geom.Rect,
+) {
 	col := Colour{1, 1, 1, 1}
 	if colour != nil {
 		col = *colour
 	}
 
-	texCoords := [4]geom.Vec2{{0, 0}, {1, 0}, {1, 1}, {0, 1}}
+	var texCoords [4]geom.Vec2
+	if texRect != nil {
+		texCoords = (*texRect).Verts()
+	} else {
+		texCoords = [4]geom.Vec2{{0, 0}, {1, 0}, {1, 1}, {0, 1}}
+	}
 
 	verts := [4]geom.Vec2{
-		r.Min,
-		{r.Max.X, r.Min.Y},
-		r.Max,
-		{r.Min.X, r.Max.Y},
+		rect.Min,
+		{rect.Max.X, rect.Min.Y},
+		rect.Max,
+		{rect.Min.X, rect.Max.Y},
 	}
 
 	data := make([]float32, 0, 6*8)
