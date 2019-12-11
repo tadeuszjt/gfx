@@ -1,7 +1,8 @@
 package gfx
 
 import (
-	"github.com/tadeuszjt/geom/geom32"
+	"github.com/tadeuszjt/geom/32"
+	"github.com/go-gl/glfw/v3.2/glfw"
 )
 
 type MouseEvent interface {
@@ -16,4 +17,7 @@ type MouseMove struct {
 }
 
 type MouseButton struct {
+	Button glfw.MouseButton
+	Action glfw.Action
+	Mods   glfw.ModifierKey
 }

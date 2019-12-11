@@ -4,7 +4,7 @@ import (
 	"github.com/faiface/glhf"
 	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/go-gl/gl/v3.3-core/gl"
-	"github.com/tadeuszjt/geom/geom32"
+	"github.com/tadeuszjt/geom/32"
 )
 
 /* Creates the internal glfw window.
@@ -55,7 +55,11 @@ func (w *Win) setup(c WinConfig) error {
 	
 	w.glfwWin.SetMouseButtonCallback(
 		func(_ *glfw.Window, button glfw.MouseButton, action glfw.Action, mods glfw.ModifierKey) {
-			c.MouseFunc(w, MouseButton{})
+			c.MouseFunc(w, MouseButton{
+				button,
+				action,
+				mods,
+			})
 		})
 		
 	/* load default white texture into slot 0 */

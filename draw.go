@@ -3,7 +3,7 @@ package gfx
 import (
 	"github.com/faiface/glhf"
 	"github.com/go-gl/mathgl/mgl32"
-	"github.com/tadeuszjt/geom/geom32"
+	"github.com/tadeuszjt/geom/32"
 )
 
 type Colour struct {
