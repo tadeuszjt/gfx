@@ -24,7 +24,7 @@ func (w *WinDraw) DrawVertexData(data []float32, texID *TexID, mat *geom.Mat3) {
 	if texID != nil {
 		tex = *texID
 	}
-	
+
 	if mat != nil {
 		w.setMatrix(*mat)
 	} else {

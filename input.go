@@ -1,8 +1,8 @@
 package gfx
 
 import (
-	"github.com/tadeuszjt/geom/32"
 	"github.com/go-gl/glfw/v3.2/glfw"
+	"github.com/tadeuszjt/geom/32"
 )
 
 type MouseEvent interface {

@@ -39,12 +39,12 @@ func (c *WinConfig) loadDefaults() {
 	if c.CloseFunc == nil {
 		c.CloseFunc = func() { fmt.Println("gfx goodbye") }
 	}
-	
+
 	if c.MouseFunc == nil {
 		c.MouseFunc = func(*Win, MouseEvent) {}
 	}
-	
+
 	if c.ResizeFunc == nil {
-		c.ResizeFunc = func(int, int) { }
+		c.ResizeFunc = func(int, int) {}
 	}
 }

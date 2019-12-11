@@ -43,4 +43,3 @@ func (w *Win) loadTextureFromPixels(width, height int, smooth bool, pixels []uin
 	w.textures = append(w.textures, tex)
 	return TexID(len(w.textures) - 1)
 }
-

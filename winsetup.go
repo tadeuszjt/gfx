@@ -2,8 +2,8 @@ package gfx
 
 import (
 	"github.com/faiface/glhf"
-	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/go-gl/gl/v3.3-core/gl"
+	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/tadeuszjt/geom/32"
 )
 
@@ -15,7 +15,7 @@ func (w *Win) createGlfwWindow(c WinConfig) error {
 	if c.Resizable {
 		resizable = glfw.True
 	}
-	
+
 	glfw.WindowHint(glfw.Resizable, resizable)
 	glfw.WindowHint(glfw.ContextVersionMajor, 3)
 	glfw.WindowHint(glfw.ContextVersionMinor, 3)
@@ -42,17 +42,17 @@ func (w *Win) setup(c WinConfig) error {
 			gl.Viewport(0, 0, int32(width), int32(height))
 			c.ResizeFunc(width, height)
 		})
-	
+
 	w.glfwWin.SetCursorPosCallback(
 		func(_ *glfw.Window, xpos, ypos float64) {
 			c.MouseFunc(w, MouseMove{geom.Vec2{float32(xpos), float32(ypos)}})
 		})
-	
+
 	w.glfwWin.SetScrollCallback(
 		func(_ *glfw.Window, dx, dy float64) {
 			c.MouseFunc(w, MouseScroll{float32(dx), float32(dy)})
 		})
-	
+
 	w.glfwWin.SetMouseButtonCallback(
 		func(_ *glfw.Window, button glfw.MouseButton, action glfw.Action, mods glfw.ModifierKey) {
 			c.MouseFunc(w, MouseButton{
@@ -61,7 +61,7 @@ func (w *Win) setup(c WinConfig) error {
 				mods,
 			})
 		})
-		
+
 	/* load default white texture into slot 0 */
 	w.textures = append(w.textures, glhf.NewTexture(1, 1, false, []uint8{255, 255, 255, 255}))
 
@@ -71,10 +71,10 @@ func (w *Win) setup(c WinConfig) error {
 	if err != nil {
 		return err
 	}
-	
+
 	/* create slice */
 	w.slice = glhf.MakeVertexSlice(w.shader, 0, 0)
-	
+
 	/* call user setup function */
 	return c.SetupFunc(w)
 }

@@ -31,7 +31,7 @@ func run() {
 
 	mainthread.Call(func() {
 		glfw.Init()
-		
+
 		err = win.createGlfwWindow(winConfig)
 		if err != nil {
 			return
@@ -43,7 +43,7 @@ func run() {
 		gl.Enable(gl.BLEND)
 		glhf.BlendFunc(glhf.SrcAlpha, glhf.OneMinusSrcAlpha)
 	})
-	
+
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Gfx Error:", err)
 		return
@@ -54,13 +54,13 @@ func run() {
 		if err != nil {
 			return
 		}
-		
+
 		win.textInit()
-		
+
 		size := win.GetFrameSize()
 		winConfig.ResizeFunc(int(size.X), int(size.Y))
 	})
-	
+
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Gfx Error:", err)
 		return
