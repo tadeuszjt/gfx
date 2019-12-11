@@ -28,7 +28,7 @@ func (w *Win) LoadTexture(path string) (TexID, error) {
 	}
 
 	/* generate mipmap */
-	id := w.loadTextureFromPixels(width, height, pixels)
+	id := w.loadTextureFromPixels(width, height, true, pixels)
 	tex := w.textures[id]
 	tex.Begin()
 	gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR)
@@ -38,8 +38,8 @@ func (w *Win) LoadTexture(path string) (TexID, error) {
 	return id, nil
 }
 
-func (w *Win) loadTextureFromPixels(width, height int, pixels []uint8) TexID {
-	tex := glhf.NewTexture(width, height, true, pixels)
+func (w *Win) loadTextureFromPixels(width, height int, smooth bool, pixels []uint8) TexID {
+	tex := glhf.NewTexture(width, height, smooth, pixels)
 	w.textures = append(w.textures, tex)
 	return TexID(len(w.textures) - 1)
 }

@@ -55,6 +55,8 @@ func run() {
 			return
 		}
 		
+		win.textInit()
+		
 		size := win.GetFrameSize()
 		winConfig.ResizeFunc(int(size.X), int(size.Y))
 	})

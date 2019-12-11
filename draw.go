@@ -27,6 +27,8 @@ func (w *WinDraw) DrawVertexData(data []float32, texID *TexID, mat *geom.Mat3) {
 	
 	if mat != nil {
 		w.setMatrix(*mat)
+	} else {
+		w.setMatrix(geom.Mat3Identity())
 	}
 
 	w.setActiveTexture(tex)
