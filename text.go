@@ -16,20 +16,11 @@ const (
 )
 
 var (
-	textTexID    TexID
-	trueTypeFont *truetype.Font
+	trueTypeFont, _ = truetype.Parse(goregular.TTF)
 )
 
-func init() {
-	var err error
-	trueTypeFont, err = truetype.Parse(goregular.TTF)
-	if err != nil {
-		panic(err)
-	}
-}
-
 func (w *Win) textInit() {
-	textTexID = w.loadTextureFromPixels(
+	w.textTexID = w.loadTextureFromPixels(
 		textTexWidth,
 		textTexHeight,
 		false,
@@ -64,7 +55,7 @@ func (t *Text) SetString(str string) {
 		Dst:  t.img,
 		Src:  image.Black,
 		Face: t.face,
-		Dot:  fixed.Point26_6{X: -bounds.Min.X, Y: -bounds.Min.Y},
+		Dot:  fixed.Point26_6{X: 0, Y: -bounds.Min.Y},
 	}
 	d.DrawString(t.str)
 }
@@ -85,12 +76,12 @@ func (w *WinDraw) DrawText(text *Text, pos geom.Vec2) {
 		return
 	}
 	
-	w.setActiveTexture(textTexID)
+	w.setActiveTexture(w.window.textTexID)
 	w.activeTexture.SetPixels(0, 0, text.w, text.h, text.img.Pix)
 
 	W, H := float32(text.w), float32(text.h)
 	strRect := geom.MakeRect(W, H, pos)
 	texRect := geom.RectOrigin(W/textTexWidth, H/textTexHeight)
 
-	w.DrawRect(strRect, &textTexID, nil, nil, &texRect)
+	w.DrawRect(strRect, &w.window.textTexID, nil, nil, &texRect)
 }
