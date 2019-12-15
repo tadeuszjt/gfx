@@ -10,11 +10,14 @@ import (
 type TexID int
 
 type Win struct {
-	glfwWin   *glfw.Window
-	slice     *glhf.VertexSlice
-	shader    *glhf.Shader
-	textures  []*glhf.Texture
-	textTexID TexID
+	glfwWin  *glfw.Window
+	w2D, w3D struct {
+		slice  *glhf.VertexSlice
+		shader *glhf.Shader
+	}
+	textures   []*glhf.Texture
+	whiteTexID TexID
+	textTexID  TexID
 }
 
 func (w *Win) GetFrameSize() geom.Vec2 {
