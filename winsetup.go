@@ -2,7 +2,9 @@ package gfx
 
 import (
 	"github.com/faiface/glhf"
+	"github.com/go-gl/gl/v3.3-core/gl"
 	"github.com/go-gl/glfw/v3.2/glfw"
+	"github.com/tadeuszjt/geom/32"
 )
 
 /* Creates the internal glfw window.
@@ -34,27 +36,44 @@ func (w *Win) makeContextCurrent() {
 /* Window setup after OpenGL initialised and makeContextCurrent()
  */
 func (w *Win) setup(c WinConfig) error {
-	w.setupText()
-	w.setupInput(&c)
+	/* setup callbacks */
+	w.glfwWin.SetFramebufferSizeCallback(
+		func(_ *glfw.Window, width, height int) {
+			gl.Viewport(0, 0, int32(width), int32(height))
+			c.ResizeFunc(width, height)
+		})
 
-	/* load default white texture */
-	w.whiteTexID = w.loadTextureFromPixels(1, 1, false, []uint8{255, 255, 255, 255})
+	w.glfwWin.SetCursorPosCallback(
+		func(_ *glfw.Window, xpos, ypos float64) {
+			c.MouseFunc(w, MouseMove{geom.Vec2{float32(xpos), float32(ypos)}})
+		})
 
-	/* load shaders */
+	w.glfwWin.SetScrollCallback(
+		func(_ *glfw.Window, dx, dy float64) {
+			c.MouseFunc(w, MouseScroll{float32(dx), float32(dy)})
+		})
+
+	w.glfwWin.SetMouseButtonCallback(
+		func(_ *glfw.Window, button glfw.MouseButton, action glfw.Action, mods glfw.ModifierKey) {
+			c.MouseFunc(w, MouseButton{
+				button,
+				action,
+				mods,
+			})
+		})
+
+	/* load default white texture into slot 0 */
+	w.textures = append(w.textures, glhf.NewTexture(1, 1, false, []uint8{255, 255, 255, 255}))
+
+	/* load shader */
 	var err error
-	w.w2D.shader, err = newShader(&shader2D)
-	if err != nil {
-		return err
-	}
-
-	w.w3D.shader, err = newShader(&shader3D)
+	w.shader, err = newShader(&shader2D)
 	if err != nil {
 		return err
 	}
 
 	/* create slice */
-	w.w2D.slice = glhf.MakeVertexSlice(w.w2D.shader, 0, 0)
-	w.w3D.slice = glhf.MakeVertexSlice(w.w3D.shader, 0, 0)
+	w.slice = glhf.MakeVertexSlice(w.shader, 0, 0)
 
 	/* call user setup function */
 	return c.SetupFunc(w)

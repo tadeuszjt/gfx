@@ -2,7 +2,7 @@ package gfx
 
 import (
 	"github.com/golang/freetype/truetype"
-	//"github.com/tadeuszjt/geom/32"
+	"github.com/tadeuszjt/geom/32"
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/gofont/goregular"
 	"golang.org/x/image/math/fixed"
@@ -19,7 +19,7 @@ var (
 	trueTypeFont, _ = truetype.Parse(goregular.TTF)
 )
 
-func (w *Win) setupText() {
+func (w *Win) textInit() {
 	w.textTexID = w.loadTextureFromPixels(
 		textTexWidth,
 		textTexHeight,
@@ -28,16 +28,16 @@ func (w *Win) setupText() {
 }
 
 type Text struct {
-	str  string
-	size float64
-	w, h int
-	face font.Face
-	img  *image.RGBA
+	str   string
+	size  float64
+	w, h  int
+	face  font.Face
+	img   *image.RGBA
 }
 
 func (t *Text) SetString(str string) {
 	t.str = str
-
+	
 	if t.face == nil {
 		t.size = 12
 		t.face = truetype.NewFace(trueTypeFont, &truetype.Options{
@@ -46,11 +46,11 @@ func (t *Text) SetString(str string) {
 			Hinting: font.HintingNone,
 		})
 	}
-
+	
 	bounds, _ := font.BoundString(t.face, t.str)
-	t.w, t.h = bounds.Max.X.Ceil(), (-bounds.Min.Y).Ceil()+int(t.size*0.4)
+	t.w, t.h = bounds.Max.X.Ceil(), (-bounds.Min.Y).Ceil() + int(t.size * 0.4)
 	t.img = image.NewRGBA(image.Rect(0, 0, t.w, t.h))
-
+	
 	d := &font.Drawer{
 		Dst:  t.img,
 		Src:  image.Black,
@@ -67,21 +67,21 @@ func (t *Text) SetSize(size float64) {
 		DPI:     textDPI,
 		Hinting: font.HintingNone,
 	})
-
+	
 	t.SetString(t.str)
 }
 
-//func (w *WinDraw) DrawText(text *Text, pos geom.Vec2) {
-//	if text.img == nil {
-//		return
-//	}
-//
-//	w.setActiveTexture(w.window.textTexID)
-//	w.activeTexture.SetPixels(0, 0, text.w, text.h, text.img.Pix)
-//
-//	W, H := float32(text.w), float32(text.h)
-//	strRect := geom.MakeRect(W, H, pos)
-//	texRect := geom.RectOrigin(W/textTexWidth, H/textTexHeight)
-//
-//	w.DrawRect(strRect, &w.window.textTexID, nil, nil, &texRect)
-//}
+func (w *WinDraw) DrawText(text *Text, pos geom.Vec2) {
+	if text.img == nil {
+		return
+	}
+	
+	w.setActiveTexture(w.window.textTexID)
+	w.activeTexture.SetPixels(0, 0, text.w, text.h, text.img.Pix)
+
+	W, H := float32(text.w), float32(text.h)
+	strRect := geom.MakeRect(W, H, pos)
+	texRect := geom.RectOrigin(W/textTexWidth, H/textTexHeight)
+
+	w.DrawRect(strRect, &w.window.textTexID, nil, nil, &texRect)
+}

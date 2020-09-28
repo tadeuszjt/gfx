@@ -41,36 +41,3 @@ void main() {
 	},
 	glhf.AttrFormat{{Name: "matrix", Type: glhf.Mat3}},
 }
-
-var shader3D = GLShader{
-	`#version 330 core
-uniform mat4 view, model;
-in vec3 position;
-in vec2 texCoord;
-in vec4 colour;
-out vec2 TexCoord;
-out vec4 Colour;
-mat4 pm = model * view;
-void main() {
-	gl_Position = vec4(vec4(position, 1) * pm);
-	TexCoord = texCoord;
-	Colour = colour;
-}`,
-	`#version 330 core
-uniform sampler2D tex;
-in vec2 TexCoord;
-in vec4 Colour;
-out vec4 outColor;
-void main() {
-	outColor = Colour * texture(tex, TexCoord);
-}`,
-	glhf.AttrFormat{
-		{Name: "position", Type: glhf.Vec3},
-		{Name: "texCoord", Type: glhf.Vec2},
-		{Name: "colour", Type: glhf.Vec4},
-	},
-	glhf.AttrFormat{
-		{Name: "view", Type: glhf.Mat4},
-		{Name: "model", Type: glhf.Mat4},
-	},
-}

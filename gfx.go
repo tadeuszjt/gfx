@@ -40,7 +40,6 @@ func run() {
 		/* OpenGL context setup */
 		glhf.Init()
 		win.makeContextCurrent()
-		gl.Enable(gl.DEPTH_TEST)
 		gl.Enable(gl.BLEND)
 		glhf.BlendFunc(glhf.SrcAlpha, glhf.OneMinusSrcAlpha)
 	})
@@ -51,6 +50,8 @@ func run() {
 	}
 
 	mainthread.Call(func() {
+		win.textInit()
+		
 		err = win.setup(winConfig)
 		if err != nil {
 			return
@@ -73,8 +74,9 @@ func run() {
 			}
 
 			winDraw := WinDraw{window: &win}
-			winDraw.Clear(1, 1, 1, 1)
+			winDraw.begin()
 			winConfig.DrawFunc(&winDraw)
+			winDraw.end()
 
 			win.glfwWin.SwapBuffers()
 			glfw.PollEvents()
