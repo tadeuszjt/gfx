@@ -97,19 +97,20 @@ func (w *WinDraw) setMatrix2D(m geom.Mat3) {
 	})
 }
 
-func geomToMgl32Mat4(m geom.Mat4) mgl32.Mat4 {
-	return mgl32.Mat4{
-		m[0], m[1], m[2], m[3],
-		m[4], m[5], m[6], m[7],
-		m[8], m[9], m[10], m[11],
-		m[12], m[13], m[14], m[15],
-	}
-}
-
 func (w *WinDraw) setViewMatrix3D(m geom.Mat4) {
-	w.window.w3D.shader.SetUniformAttr(0, geomToMgl32Mat4(m))
+	w.window.w3D.shader.SetUniformAttr(0, mgl32.Mat4{
+		m[0], m[4], m[8], m[12],
+		m[1], m[5], m[9], m[13],
+		m[2], m[6], m[10], m[14],
+		m[3], m[7], m[11], m[15],
+	})
 }
 
 func (w *WinDraw) setModelMatrix3D(m geom.Mat4) {
-	w.window.w3D.shader.SetUniformAttr(1, geomToMgl32Mat4(m))
+	w.window.w3D.shader.SetUniformAttr(1, mgl32.Mat4{
+		m[0], m[4], m[8], m[12],
+		m[1], m[5], m[9], m[13],
+		m[2], m[6], m[10], m[14],
+		m[3], m[7], m[11], m[15],
+	})
 }

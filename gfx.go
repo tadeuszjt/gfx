@@ -9,15 +9,13 @@ import (
 	"os"
 )
 
+var winConfig WinConfig
+
 func RunWindow(config WinConfig) {
 	winConfig = config
 	winConfig.loadDefaults()
 	mainthread.Run(run)
 }
-
-var (
-	winConfig WinConfig
-)
 
 func run() {
 	defer func() {

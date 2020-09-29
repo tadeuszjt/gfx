@@ -1,0 +1,105 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	0.0.0	//
+A	draw.go	/^	R, G, B, A float32$/;"	m	struct:gfx.Colour	typeref:typename:float32
+Action	input.go	/^	Action glfw.Action$/;"	m	struct:gfx.MouseButton	typeref:typename:glfw.Action
+B	draw.go	/^	R, G, B, A float32$/;"	m	struct:gfx.Colour	typeref:typename:float32
+Button	input.go	/^	Button glfw.MouseButton$/;"	m	struct:gfx.MouseButton	typeref:typename:glfw.MouseButton
+Clear	draw.go	/^func (w *WinDraw) Clear(r, g, b, a float32) {$/;"	f	unknown:gfx.WinDraw
+CloseFunc	winconfig.go	/^	CloseFunc     func()$/;"	m	struct:gfx.WinConfig	typeref:typename:func()
+Colour	draw.go	/^type Colour struct {$/;"	s	package:gfx
+Draw3DVertexData	draw.go	/^func (w *WinDraw) Draw3DVertexData(data []float32, texID *TexID, model, view *geom.Mat4) {$/;"	f	unknown:gfx.WinDraw
+DrawFunc	winconfig.go	/^	DrawFunc      func(*WinDraw)$/;"	m	struct:gfx.WinConfig	typeref:typename:func(*WinDraw)
+DrawVertexData	draw.go	/^func (w *WinDraw) DrawVertexData(data []float32, texID *TexID, mat *geom.Mat3) {$/;"	f	unknown:gfx.WinDraw
+Dx	input.go	/^	Dx, Dy float32$/;"	m	struct:gfx.MouseScroll	typeref:typename:float32
+Dy	input.go	/^	Dx, Dy float32$/;"	m	struct:gfx.MouseScroll	typeref:typename:float32
+Example	README.md	/^## Example$/;"	s
+G	draw.go	/^	R, G, B, A float32$/;"	m	struct:gfx.Colour	typeref:typename:float32
+GLShader	shaders.go	/^type GLShader struct {$/;"	s	package:gfx
+GetFrameSize	draw.go	/^func (w *WinDraw) GetFrameSize() geom.Vec2 {$/;"	f	unknown:gfx.WinDraw	typeref:typename:geom.Vec2
+GetFrameSize	window.go	/^func (w *Win) GetFrameSize() geom.Vec2 {$/;"	f	unknown:gfx.Win	typeref:typename:geom.Vec2
+Height	winconfig.go	/^	Width, Height int$/;"	m	struct:gfx.WinConfig	typeref:typename:int
+LoadTexture	window.go	/^func (w *Win) LoadTexture(path string) (TexID, error) {$/;"	f	unknown:gfx.Win	typeref:typename:(TexID, error)
+Mods	input.go	/^	Mods   glfw.ModifierKey$/;"	m	struct:gfx.MouseButton	typeref:typename:glfw.ModifierKey
+MouseButton	input.go	/^type MouseButton struct {$/;"	s	package:gfx
+MouseEvent	input.go	/^type MouseEvent interface {$/;"	i	package:gfx
+MouseFunc	winconfig.go	/^	MouseFunc     func(*Win, MouseEvent)$/;"	m	struct:gfx.WinConfig	typeref:typename:func(*Win, MouseEvent)
+MouseMove	input.go	/^type MouseMove struct {$/;"	s	package:gfx
+MouseScroll	input.go	/^type MouseScroll struct {$/;"	s	package:gfx
+Position	input.go	/^	Position geom.Vec2$/;"	m	struct:gfx.MouseMove	typeref:typename:geom.Vec2
+R	draw.go	/^	R, G, B, A float32$/;"	m	struct:gfx.Colour	typeref:typename:float32
+Resizable	winconfig.go	/^	Resizable     bool$/;"	m	struct:gfx.WinConfig	typeref:typename:bool
+ResizeFunc	winconfig.go	/^	ResizeFunc    func(width, height int)$/;"	m	struct:gfx.WinConfig	typeref:typename:func(width, height int)
+RunWindow	gfx.go	/^func RunWindow(config WinConfig) {$/;"	f	package:gfx
+SetSize	text.go	/^func (t *Text) SetSize(size float64) {$/;"	f	unknown:gfx.Text
+SetString	text.go	/^func (t *Text) SetString(str string) {$/;"	f	unknown:gfx.Text
+SetupFunc	winconfig.go	/^	SetupFunc     func(*Win) error$/;"	m	struct:gfx.WinConfig	typeref:typename:func(*Win) error
+TexID	window.go	/^type TexID int$/;"	t	package:gfx
+Text	text.go	/^type Text struct {$/;"	s	package:gfx
+Title	winconfig.go	/^	Title         string$/;"	m	struct:gfx.WinConfig	typeref:typename:string
+Width	winconfig.go	/^	Width, Height int$/;"	m	struct:gfx.WinConfig	typeref:typename:int
+Win	window.go	/^type Win struct {$/;"	s	package:gfx
+WinConfig	winconfig.go	/^type WinConfig struct {$/;"	s	package:gfx
+WinDraw	draw.go	/^type WinDraw struct {$/;"	s	package:gfx
+_	text.go	/^	trueTypeFont, _ = truetype.Parse(goregular.TTF)$/;"	v	package:gfx
+angleX	examples/cube.go	/^	angleX, angleY geom.Angle$/;"	v	package:main
+angleY	examples/cube.go	/^	angleX, angleY geom.Angle$/;"	v	package:main
+colours	examples/cube.go	/^	colours = []gfx.Colour{$/;"	v	package:main
+corners	examples/cube.go	/^	corners = []geom.Vec3{$/;"	v	package:main
+createGlfwWindow	winsetup.go	/^func (w *Win) createGlfwWindow(c WinConfig) error {$/;"	f	unknown:gfx.Win	typeref:typename:error
+draw	examples/cube.go	/^func draw(w *gfx.WinDraw) {$/;"	f	package:main
+draw	examples/triangle.go	/^func draw(w *gfx.WinDraw) {$/;"	f	package:main
+face	text.go	/^	face font.Face$/;"	m	struct:gfx.Text	typeref:typename:font.Face
+fragmentSrc	shaders.go	/^	vertexSrc, fragmentSrc string$/;"	m	struct:gfx.GLShader	typeref:typename:string
+gfx	README.md	/^# gfx$/;"	c
+gfx	draw.go	/^package gfx$/;"	p
+gfx	gfx.go	/^package gfx$/;"	p
+gfx	input.go	/^package gfx$/;"	p
+gfx	shaders.go	/^package gfx$/;"	p
+gfx	text.go	/^package gfx$/;"	p
+gfx	texture.go	/^package gfx$/;"	p
+gfx	winconfig.go	/^package gfx$/;"	p
+gfx	window.go	/^package gfx$/;"	p
+gfx	winsetup.go	/^package gfx$/;"	p
+glfwWin	window.go	/^	glfwWin  *glfw.Window$/;"	m	struct:gfx.Win	typeref:typename:*glfw.Window
+h	text.go	/^	w, h int$/;"	m	struct:gfx.Text	typeref:typename:int
+img	text.go	/^	img  *image.RGBA$/;"	m	struct:gfx.Text	typeref:typename:*image.RGBA
+loadDefaults	winconfig.go	/^func (c *WinConfig) loadDefaults() {$/;"	f	unknown:gfx.WinConfig
+loadImage	texture.go	/^func loadImage(path string) (int, int, []uint8, error) {$/;"	f	package:gfx	typeref:typename:(int, int, []uint8, error)
+loadTextureFromPixels	window.go	/^func (w *Win) loadTextureFromPixels(width, height int, smooth bool, pixels []uint8) TexID {$/;"	f	unknown:gfx.Win	typeref:typename:TexID
+main	examples/cube.go	/^func main() {$/;"	f	package:main
+main	examples/cube.go	/^package main$/;"	p
+main	examples/triangle.go	/^func main() {$/;"	f	package:main
+main	examples/triangle.go	/^package main$/;"	p
+makeContextCurrent	winsetup.go	/^func (w *Win) makeContextCurrent() {$/;"	f	unknown:gfx.Win
+newShader	shaders.go	/^func newShader(s *GLShader) (*glhf.Shader, error) {$/;"	f	package:gfx	typeref:typename:(*glhf.Shader, error)
+run	gfx.go	/^func run() {$/;"	f	package:gfx
+setMatrix2D	draw.go	/^func (w *WinDraw) setMatrix2D(m geom.Mat3) {$/;"	f	unknown:gfx.WinDraw
+setModelMatrix3D	draw.go	/^func (w *WinDraw) setModelMatrix3D(m geom.Mat4) {$/;"	f	unknown:gfx.WinDraw
+setViewMatrix3D	draw.go	/^func (w *WinDraw) setViewMatrix3D(m geom.Mat4) {$/;"	f	unknown:gfx.WinDraw
+setup	winsetup.go	/^func (w *Win) setup(c WinConfig) error {$/;"	f	unknown:gfx.Win	typeref:typename:error
+setupInput	input.go	/^func (w *Win) setupInput(c *WinConfig) {$/;"	f	unknown:gfx.Win
+setupText	text.go	/^func (w *Win) setupText() {$/;"	f	unknown:gfx.Win
+shader2D	shaders.go	/^var shader2D = GLShader{$/;"	v	package:gfx
+shader3D	shaders.go	/^var shader3D = GLShader{$/;"	v	package:gfx
+size	text.go	/^	size float64$/;"	m	struct:gfx.Text	typeref:typename:float64
+str	text.go	/^	str  string$/;"	m	struct:gfx.Text	typeref:typename:string
+textDPI	text.go	/^	textDPI       = 72$/;"	c	package:gfx
+textTexHeight	text.go	/^	textTexHeight = 256$/;"	c	package:gfx
+textTexID	window.go	/^	textTexID  TexID$/;"	m	struct:gfx.Win	typeref:typename:TexID
+textTexWidth	text.go	/^	textTexWidth  = 2048$/;"	c	package:gfx
+textures	window.go	/^	textures   []*glhf.Texture$/;"	m	struct:gfx.Win	typeref:typename:[]*glhf.Texture
+trueTypeFont	text.go	/^	trueTypeFont, _ = truetype.Parse(goregular.TTF)$/;"	v	package:gfx
+uniformFmt	shaders.go	/^	vertexFmt, uniformFmt  glhf.AttrFormat$/;"	m	struct:gfx.GLShader	typeref:typename:glhf.AttrFormat
+vertexFmt	shaders.go	/^	vertexFmt, uniformFmt  glhf.AttrFormat$/;"	m	struct:gfx.GLShader	typeref:typename:glhf.AttrFormat
+vertexSrc	shaders.go	/^	vertexSrc, fragmentSrc string$/;"	m	struct:gfx.GLShader	typeref:typename:string
+w	text.go	/^	w, h int$/;"	m	struct:gfx.Text	typeref:typename:int
+w2D	window.go	/^	w2D, w3D struct {$/;"	m	struct:gfx.Win	typeref:typename:struct { slice *glhf.VertexSlice; shader *glhf.Shader; }
+w3D	window.go	/^	w2D, w3D struct {$/;"	m	struct:gfx.Win	typeref:typename:struct { slice *glhf.VertexSlice; shader *glhf.Shader; }
+whiteTexID	window.go	/^	whiteTexID TexID$/;"	m	struct:gfx.Win	typeref:typename:TexID
+winConfig	gfx.go	/^var winConfig WinConfig$/;"	v	package:gfx
+window	draw.go	/^	window *Win$/;"	m	struct:gfx.WinDraw	typeref:typename:*Win

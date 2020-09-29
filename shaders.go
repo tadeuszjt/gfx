@@ -22,7 +22,7 @@ in vec4 colour;
 out vec2 TexCoord;
 out vec4 Colour;
 void main() {
-	gl_Position = vec4(matrix * vec3(position, 1), 1.0);
+	gl_Position = vec4(vec2(matrix*vec3(position, 1)), 0, 1);
 	TexCoord = texCoord;
 	Colour = colour;
 }`,
@@ -50,9 +50,8 @@ in vec2 texCoord;
 in vec4 colour;
 out vec2 TexCoord;
 out vec4 Colour;
-mat4 pm = model * view;
 void main() {
-	gl_Position = vec4(vec4(position, 1) * pm);
+	gl_Position = view * model * vec4(position, 1);
 	TexCoord = texCoord;
 	Colour = colour;
 }`,
