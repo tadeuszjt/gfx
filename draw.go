@@ -6,10 +6,6 @@ import (
 	"github.com/tadeuszjt/geom/32"
 )
 
-type Colour struct {
-	R, G, B, A float32
-}
-
 type WinDraw struct {
 	window *Win
 }
@@ -47,7 +43,30 @@ func (w *WinDraw) DrawVertexData(data []float32, texID *TexID, mat *geom.Mat3) {
 	w.window.w2D.slice.Draw()
 }
 
+func (w *WinDraw) DrawSprite(ori geom.Ori2, rec geom.Rect, col Colour, mat geom.Mat3, tex TexID) {
+    texCoords := [4]geom.Vec2{{0, 0}, {1, 0}, {1, 1}, {0, 1}}
+    data := make([]float32, 0, 6*8)
+
+    m := ori.Mat3Transform()
+    verts := rec.Verts()
+    for i := range verts {
+        verts[i] = m.TimesVec2(verts[i], 1).Vec2()
+    }
+
+    for _, j := range [6]int{0, 1, 2, 0, 2, 3} {
+        data = append(
+            data,
+            verts[j].X, verts[j].Y,
+            texCoords[j].X, texCoords[j].Y,
+            col.R, col.G, col.B, col.A,
+        )
+    }
+
+	w.DrawVertexData(data, &tex, &mat)
+}
+
 func (w *WinDraw) Draw3DVertexData(data []float32, texID *TexID, model, view *geom.Mat4) {
+    gl.Enable(gl.DEPTH_TEST)
 	id := w.window.whiteTexID
 	if texID != nil {
 		id = *texID
@@ -76,6 +95,8 @@ func (w *WinDraw) Draw3DVertexData(data []float32, texID *TexID, model, view *ge
 	w.window.w3D.slice.SetLen(len(data) / 9)
 	w.window.w3D.slice.SetVertexData(data)
 	w.window.w3D.slice.Draw()
+
+    gl.Disable(gl.DEPTH_TEST)
 }
 
 func (w *WinDraw) GetFrameSize() geom.Vec2 {

@@ -38,7 +38,6 @@ func run() {
 		/* OpenGL context setup */
 		glhf.Init()
 		win.makeContextCurrent()
-		gl.Enable(gl.DEPTH_TEST)
 		gl.Enable(gl.BLEND)
 		glhf.BlendFunc(glhf.SrcAlpha, glhf.OneMinusSrcAlpha)
 	})
