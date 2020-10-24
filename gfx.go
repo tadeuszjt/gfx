@@ -53,8 +53,8 @@ func run() {
 			return
 		}
 
-		size := win.GetFrameSize()
-		winConfig.ResizeFunc(int(size.X), int(size.Y))
+		frame := win.GetFrameRect()
+		winConfig.ResizeFunc(int(frame.Width()), int(frame.Height()))
 	})
 
 	if err != nil {

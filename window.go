@@ -20,9 +20,13 @@ type Win struct {
 	textTexID  TexID
 }
 
-func (w *Win) GetFrameSize() geom.Vec2 {
+func (w *Win) GetFrameRect() geom.Rect {
 	width, height := w.glfwWin.GetFramebufferSize()
-	return geom.Vec2{float32(width), float32(height)}
+	return geom.RectOrigin(float32(width), float32(height))
+}
+
+func (w *Win) GetGlfwWindow() *glfw.Window {
+    return w.glfwWin
 }
 
 func (w *Win) LoadTexture(path string) (TexID, error) {

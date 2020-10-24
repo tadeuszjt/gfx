@@ -14,7 +14,7 @@ func newShader(s *GLShader) (*glhf.Shader, error) {
 }
 
 var shader2D = GLShader{
-	`#version 330 core
+`#version 330 core
 uniform mat3 matrix;
 in vec2 position;
 in vec2 texCoord;
@@ -26,7 +26,7 @@ void main() {
 	TexCoord = texCoord;
 	Colour = colour;
 }`,
-	`#version 330 core
+`#version 330 core
 uniform sampler2D tex;
 in vec2 TexCoord;
 in vec4 Colour;
@@ -43,7 +43,7 @@ void main() {
 }
 
 var shader3D = GLShader{
-	`#version 330 core
+`#version 330 core
 uniform mat4 view, model;
 in vec3 position;
 in vec2 texCoord;
@@ -55,7 +55,7 @@ void main() {
 	TexCoord = texCoord;
 	Colour = colour;
 }`,
-	`#version 330 core
+`#version 330 core
 uniform sampler2D tex;
 in vec2 TexCoord;
 in vec4 Colour;
@@ -70,6 +70,6 @@ void main() {
 	},
 	glhf.AttrFormat{
 		{Name: "view", Type: glhf.Mat4},
-		{Name: "model", Type: glhf.Mat4},
+        {Name: "model", Type: glhf.Mat4},
 	},
 }

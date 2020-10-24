@@ -1,5 +1,13 @@
 package gfx
 
+var (
+    Red   = Colour{1, 0, 0, 1}
+    Green = Colour{0, 1, 0, 1}
+    Blue  = Colour{0, 0, 1, 1}
+    White = Colour{1, 1, 1, 1}
+    Black = Colour{0, 0, 0, 1}
+)
+
 type Colour struct {
 	R, G, B, A float32
 }

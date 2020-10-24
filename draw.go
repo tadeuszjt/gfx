@@ -100,7 +100,10 @@ func (w *WinDraw) Draw3DVertexData(data []float32, texID *TexID, model, view *ge
 }
 
 func (w *WinDraw) GetFrameSize() geom.Vec2 {
-	return w.window.GetFrameSize()
+	return geom.Vec2{
+        w.window.GetFrameRect().Width(),
+        w.window.GetFrameRect().Height(),
+    }
 }
 
 func (w *WinDraw) setMatrix2D(m geom.Mat3) {
