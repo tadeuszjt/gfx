@@ -71,53 +71,10 @@ func draw(w *gfx.WinDraw) {
 	// 3.) Sequence transformations
 	view := perspective.Product(rx).Product(ry).Product(translation)
 
-	verts := [5]geom.Vec3{
-		{3, 0, 0},
-		{-1, 1, 1},
-		{-1, 1, -1},
-		{-1, -1, -1},
-		{-1, -1, 1},
-	}
-
-	elem := [6 * 3]int{
-		0, 1, 2,
-		0, 2, 3,
-		0, 3, 4,
-		0, 1, 4,
-		1, 2, 3,
-		1, 3, 4,
-	}
-
-	arrows := []struct {
-		model    geom.Mat4
-		colour   gfx.Colour
-		position geom.Vec3
-	}{
-		{geom.Mat4Identity(), gfx.Red, geom.Vec3{3, 0, 0}},
-		{geom.Mat4RotationZ(geom.Angle90Deg), gfx.Green, geom.Vec3{0, 3, 0}},
-		{geom.Mat4RotationY(-geom.Angle90Deg), gfx.Blue, geom.Vec3{0, 0, 3}},
-	}
-
-	for i := range arrows {
-		data := make([]float32, 0, len(elem)*(3+2+4))
-
-		for _, j := range elem {
-			colour := arrows[i].colour
-
-			data = append(
-				data,
-				verts[j].X, verts[j].Y, verts[j].Z,
-				0, 0,
-				colour.R, colour.G, colour.B, colour.A,
-			)
-		}
-		translation := geom.Mat4Translation(arrows[i].position)
-		m := translation.Product(arrows[i].model)
-		w.Draw3DVertexData(data, nil, &m, &view)
-	}
+	w.Draw3DArrow(geom.Vec3{}, geom.Vec3{3, 0, 0}, gfx.Red, 2, view)
+	w.Draw3DArrow(geom.Vec3{}, geom.Vec3{0, 3, 0}, gfx.Green, 2, view)
+	w.Draw3DArrow(geom.Vec3{}, geom.Vec3{0, 0, 3}, gfx.Blue, 2, view)
 }
-
-var first = true
 
 func mouse(w *gfx.Win, ev gfx.MouseEvent) {
 	switch e := ev.(type) {

@@ -24,9 +24,9 @@ type MouseButton struct {
 }
 
 type KeyEvent struct {
-    Key    glfw.Key
-    Action glfw.Action
-    Mods   glfw.ModifierKey
+	Key    glfw.Key
+	Action glfw.Action
+	Mods   glfw.ModifierKey
 }
 
 func (w *Win) setupInput(c *WinConfig) {
@@ -48,14 +48,13 @@ func (w *Win) setupInput(c *WinConfig) {
 
 	w.glfwWin.SetMouseButtonCallback(
 		func(_ *glfw.Window, button glfw.MouseButton, action glfw.Action, mods glfw.ModifierKey) {
-			c.MouseFunc(w, MouseButton{ button, action, mods, })
+			c.MouseFunc(w, MouseButton{button, action, mods})
 		})
 
-    w.glfwWin.SetKeyCallback(
-        func(_ *glfw.Window, key glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey) {
-            c.KeyFunc(w, KeyEvent{ key, action, mods })
+	w.glfwWin.SetKeyCallback(
+		func(_ *glfw.Window, key glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey) {
+			c.KeyFunc(w, KeyEvent{key, action, mods})
 
-        })
-
+		})
 
 }

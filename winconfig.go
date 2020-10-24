@@ -12,7 +12,7 @@ type WinConfig struct {
 	DrawFunc      func(*WinDraw)
 	CloseFunc     func()
 	MouseFunc     func(*Win, MouseEvent)
-    KeyFunc       func(*Win, KeyEvent)
+	KeyFunc       func(*Win, KeyEvent)
 	ResizeFunc    func(width, height int)
 }
 
@@ -44,10 +44,10 @@ func (c *WinConfig) loadDefaults() {
 	if c.MouseFunc == nil {
 		c.MouseFunc = func(*Win, MouseEvent) {}
 	}
-    
-    if c.KeyFunc == nil {
-        c.KeyFunc = func(*Win, KeyEvent) {}
-    }
+
+	if c.KeyFunc == nil {
+		c.KeyFunc = func(*Win, KeyEvent) {}
+	}
 
 	if c.ResizeFunc == nil {
 		c.ResizeFunc = func(int, int) {}

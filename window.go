@@ -26,7 +26,7 @@ func (w *Win) GetFrameRect() geom.Rect {
 }
 
 func (w *Win) GetGlfwWindow() *glfw.Window {
-    return w.glfwWin
+	return w.glfwWin
 }
 
 func (w *Win) LoadTexture(path string) (TexID, error) {

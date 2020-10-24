@@ -1,19 +1,31 @@
 package gfx
 
+import (
+	"math/rand"
+)
+
 var (
-    Red   = Colour{1, 0, 0, 1}
-    Green = Colour{0, 1, 0, 1}
-    Blue  = Colour{0, 0, 1, 1}
-    White = Colour{1, 1, 1, 1}
-    Black = Colour{0, 0, 0, 1}
+	Red   = Colour{1, 0, 0, 1}
+	Green = Colour{0, 1, 0, 1}
+	Blue  = Colour{0, 0, 1, 1}
+	White = Colour{1, 1, 1, 1}
+	Black = Colour{0, 0, 0, 1}
 )
 
 type Colour struct {
 	R, G, B, A float32
 }
 
-type SliceColour []Colour
+func ColourRand() Colour {
+	return Colour{
+		float32(rand.Float64()),
+		float32(rand.Float64()),
+		float32(rand.Float64()),
+		1.0,
+	}
+}
 
+type SliceColour []Colour
 
 func (s *SliceColour) Len() int {
 	return len(*s)
