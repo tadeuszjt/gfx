@@ -1,5 +1,4 @@
 # gfx
-Yet another attempt at creating a graphics API
 
 ## Example
 ```go
