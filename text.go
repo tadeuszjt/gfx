@@ -2,7 +2,7 @@ package gfx
 
 import (
 	"github.com/golang/freetype/truetype"
-	//"github.com/tadeuszjt/geom/32"
+	"github.com/tadeuszjt/geom/32"
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/gofont/goregular"
 	"golang.org/x/image/math/fixed"
@@ -43,7 +43,7 @@ func (t *Text) SetString(str string) {
 		t.face = truetype.NewFace(trueTypeFont, &truetype.Options{
 			Size:    12,
 			DPI:     textDPI,
-			Hinting: font.HintingNone,
+			Hinting: font.HintingFull,
 		})
 	}
 
@@ -65,23 +65,40 @@ func (t *Text) SetSize(size float64) {
 	t.face = truetype.NewFace(trueTypeFont, &truetype.Options{
 		Size:    size,
 		DPI:     textDPI,
-		Hinting: font.HintingNone,
+        Hinting: font.HintingFull,
 	})
 
 	t.SetString(t.str)
 }
 
-//func (w *WinDraw) DrawText(text *Text, pos geom.Vec2) {
-//	if text.img == nil {
-//		return
-//	}
-//
-//	w.setActiveTexture(w.window.textTexID)
-//	w.activeTexture.SetPixels(0, 0, text.w, text.h, text.img.Pix)
-//
-//	W, H := float32(text.w), float32(text.h)
-//	strRect := geom.MakeRect(W, H, pos)
-//	texRect := geom.RectOrigin(W/textTexWidth, H/textTexHeight)
-//
-//	w.DrawRect(strRect, &w.window.textTexID, nil, nil, &texRect)
-//}
+func (w *WinDraw) DrawText(text *Text, pos geom.Vec2) {
+	if text.img == nil {
+		return
+	}
+
+	tex := w.window.textures[w.window.textTexID]
+    tex.Begin()
+	tex.SetPixels(0, 0, text.w, text.h, text.img.Pix)
+    tex.End()
+
+	W, H := float32(text.w), float32(text.h)
+	strRect := geom.MakeRect(W, H, pos)
+	texRect := geom.RectOrigin(W/textTexWidth, H/textTexHeight)
+
+    texCoords := texRect.Verts()
+    verts := strRect.Verts()
+    col := White
+    mat := geom.Mat3Identity()
+	data := make([]float32, 0, 6*8)
+
+	for _, j := range [6]int{0, 1, 2, 0, 2, 3} {
+		data = append(
+			data,
+			verts[j].X, verts[j].Y,
+			texCoords[j].X, texCoords[j].Y,
+			col.R, col.G, col.B, col.A,
+		)
+	}
+
+	w.DrawVertexData(data, &w.window.textTexID, &mat)
+}
