@@ -9,7 +9,7 @@ type WinConfig struct {
 	Width, Height int
 	Resizable     bool
 	SetupFunc     func(*Win) error
-	DrawFunc      func(*WinDraw)
+	DrawFunc      func(*WinCanvas)
 	CloseFunc     func()
 	MouseFunc     func(*Win, MouseEvent)
 	KeyFunc       func(*Win, KeyEvent)
@@ -30,7 +30,7 @@ func (c *WinConfig) loadDefaults() {
 	}
 
 	if c.DrawFunc == nil {
-		c.DrawFunc = func(w *WinDraw) { w.Clear(1, 1, 1, 1) }
+		c.DrawFunc = func(w *WinCanvas) { w.Clear(White) }
 	}
 
 	if c.SetupFunc == nil {

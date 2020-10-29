@@ -69,8 +69,8 @@ func run() {
 				shouldQuit = true
 			}
 
-			winDraw := WinDraw{window: &win}
-			winDraw.Clear(1, 1, 1, 1)
+			winDraw := WinCanvas{window: &win}
+			winDraw.Clear(White)
 			winConfig.DrawFunc(&winDraw)
 
 			win.glfwWin.SwapBuffers()

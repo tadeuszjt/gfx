@@ -52,7 +52,7 @@ func setup(w *gfx.Win) error {
 	return nil
 }
 
-func draw(w *gfx.WinDraw) {
+func draw(w *gfx.WinCanvas) {
 	playerUpdate()
 
 	// 1.) Build perspective matrix which looks down Z axis for OpenGl NDC
@@ -71,9 +71,9 @@ func draw(w *gfx.WinDraw) {
 	// 3.) Sequence transformations
 	view := perspective.Product(rx).Product(ry).Product(translation)
 
-	w.Draw3DArrow(geom.Vec3{}, geom.Vec3{3, 0, 0}, gfx.Red, 2, view)
-	w.Draw3DArrow(geom.Vec3{}, geom.Vec3{0, 3, 0}, gfx.Green, 2, view)
-	w.Draw3DArrow(geom.Vec3{}, geom.Vec3{0, 0, 3}, gfx.Blue, 2, view)
+	gfx.Draw3DArrow(w, geom.Vec3{}, geom.Vec3{3, 0, 0}, gfx.Red, 2, view)
+	gfx.Draw3DArrow(w, geom.Vec3{}, geom.Vec3{0, 3, 0}, gfx.Green, 2, view)
+	gfx.Draw3DArrow(w, geom.Vec3{}, geom.Vec3{0, 0, 3}, gfx.Blue, 2, view)
 }
 
 func mouse(w *gfx.Win, ev gfx.MouseEvent) {

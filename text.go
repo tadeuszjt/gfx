@@ -65,30 +65,30 @@ func (t *Text) SetSize(size float64) {
 	t.face = truetype.NewFace(trueTypeFont, &truetype.Options{
 		Size:    size,
 		DPI:     textDPI,
-        Hinting: font.HintingFull,
+		Hinting: font.HintingFull,
 	})
 
 	t.SetString(t.str)
 }
 
-func (w *WinDraw) DrawText(text *Text, pos geom.Vec2) {
+func (w *WinCanvas) DrawText(text *Text, pos geom.Vec2) {
 	if text.img == nil {
 		return
 	}
 
-	tex := w.window.textures[w.window.textTexID]
-    tex.Begin()
+	tex := w.window.textures[w.window.textTexID].Texture()
+	tex.Begin()
 	tex.SetPixels(0, 0, text.w, text.h, text.img.Pix)
-    tex.End()
+	tex.End()
 
 	W, H := float32(text.w), float32(text.h)
 	strRect := geom.MakeRect(W, H, pos)
 	texRect := geom.RectOrigin(W/textTexWidth, H/textTexHeight)
 
-    texCoords := texRect.Verts()
-    verts := strRect.Verts()
-    col := White
-    mat := geom.Mat3Identity()
+	texCoords := texRect.Verts()
+	verts := strRect.Verts()
+	col := White
+	mat := geom.Mat3Identity()
 	data := make([]float32, 0, 6*8)
 
 	for _, j := range [6]int{0, 1, 2, 0, 2, 3} {
@@ -100,5 +100,5 @@ func (w *WinDraw) DrawText(text *Text, pos geom.Vec2) {
 		)
 	}
 
-	w.DrawVertexData(data, &w.window.textTexID, &mat)
+	w.Draw2DVertexData(data, &w.window.textTexID, &mat)
 }

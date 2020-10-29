@@ -44,14 +44,14 @@ void main() {
 
 var shader3D = GLShader{
 	`#version 330 core
-uniform mat4 view, model;
+uniform mat4 matrix;
 in vec3 position;
 in vec2 texCoord;
 in vec4 colour;
 out vec2 TexCoord;
 out vec4 Colour;
 void main() {
-	gl_Position = view * model * vec4(position, 1);
+	gl_Position = matrix * vec4(position, 1);
 	TexCoord = texCoord;
 	Colour = colour;
 }`,
@@ -69,7 +69,6 @@ void main() {
 		{Name: "colour", Type: glhf.Vec4},
 	},
 	glhf.AttrFormat{
-		{Name: "view", Type: glhf.Mat4},
-		{Name: "model", Type: glhf.Mat4},
+		{Name: "matrix", Type: glhf.Mat4},
 	},
 }

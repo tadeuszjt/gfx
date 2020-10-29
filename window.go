@@ -15,7 +15,7 @@ type Win struct {
 		slice  *glhf.VertexSlice
 		shader *glhf.Shader
 	}
-	textures   []*glhf.Texture
+	textures   []*glhf.Frame
 	whiteTexID TexID
 	textTexID  TexID
 }
@@ -37,7 +37,7 @@ func (w *Win) LoadTexture(path string) (TexID, error) {
 
 	/* generate mipmap */
 	id := w.loadTextureFromPixels(width, height, true, pixels)
-	tex := w.textures[id]
+	tex := w.textures[id].Texture()
 	tex.Begin()
 	gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR)
 	gl.GenerateMipmap(gl.TEXTURE_2D)
@@ -47,7 +47,11 @@ func (w *Win) LoadTexture(path string) (TexID, error) {
 }
 
 func (w *Win) loadTextureFromPixels(width, height int, smooth bool, pixels []uint8) TexID {
-	tex := glhf.NewTexture(width, height, smooth, pixels)
-	w.textures = append(w.textures, tex)
+	frame := glhf.NewFrame(width, height, smooth)
+	tex := frame.Texture()
+	tex.Begin()
+	tex.SetPixels(0, 0, width, height, pixels)
+	tex.End()
+	w.textures = append(w.textures, frame)
 	return TexID(len(w.textures) - 1)
 }

@@ -13,7 +13,7 @@ func setup(w *gfx.Win) error {
 	return nil
 }
 
-func draw(w *gfx.WinDraw) {
+func draw(w *gfx.WinCanvas) {
 	w.DrawText(&text, geom.Vec2{})
 }
 

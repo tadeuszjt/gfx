@@ -4,7 +4,7 @@ import (
 	"github.com/tadeuszjt/gfx"
 )
 
-func draw(w *gfx.WinDraw) {
+func draw(w *gfx.WinCanvas) {
 	data := []float32{
 		-0, 0,
 		0, 0,
