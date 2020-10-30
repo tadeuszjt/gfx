@@ -8,16 +8,16 @@ func draw(w *gfx.WinCanvas) {
 	data := []float32{
 		-0, 0,
 		0, 0,
-		0, 0, 0, 1,
+		1, 0, 0, 1,
 		100, 0,
 		0, 0,
-		0, 0, 1, 1,
+		0, 1, 0, 1,
 		0, 100,
 		0, 0,
-		0, 1, 0, 1,
+		0, 0, 1, 1,
 	}
 
-	w.DrawVertexData(data, nil, nil)
+	w.Draw2DVertexData(data, nil, nil)
 }
 
 func main() {

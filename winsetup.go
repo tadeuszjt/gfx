@@ -34,11 +34,14 @@ func (w *Win) makeContextCurrent() {
 /* Window setup after OpenGL initialised and makeContextCurrent()
  */
 func (w *Win) setup(c WinConfig) error {
+	/* 0 texId invalid */
+	w.textures = append(w.textures, texture{false, false, nil})
+
 	w.setupText()
 	w.setupInput(&c)
 
 	/* load default white texture */
-	w.whiteTexID = w.loadTextureFromPixels(1, 1, false, []uint8{255, 255, 255, 255})
+	w.whiteTexID = w.LoadTextureFromPixels(1, 1, []uint8{255, 255, 255, 255})
 
 	/* load shaders */
 	var err error

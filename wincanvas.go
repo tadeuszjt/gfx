@@ -18,17 +18,21 @@ func (w *WinCanvas) Clear(col Colour) {
 	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 }
 
-func (w *WinCanvas) Draw2DVertexData(data []float32, texID *TexID, mat *geom.Mat3) {
-	id := w.window.whiteTexID
-	if texID != nil {
-		id = *texID
+func (w *WinCanvas) GetTextureCanvas(texID TexID) texCanvas {
+	w.window.getTexture(&texID)
+	return texCanvas{
+		win:   w.window,
+		texID: texID,
 	}
-	tex := w.window.textures[id].Texture()
+}
+
+func (w *WinCanvas) Draw2DVertexData(data []float32, texID *TexID, mat *geom.Mat3) {
+	tex := w.window.getTexture(texID)
 
 	w.window.w2D.shader.Begin()
 	w.window.w2D.slice.Begin()
-	tex.Begin()
-	defer tex.End()
+	tex.frame.Texture().Begin()
+	defer tex.frame.Texture().End()
 	defer w.window.w2D.slice.End()
 	defer w.window.w2D.shader.End()
 
@@ -40,21 +44,18 @@ func (w *WinCanvas) Draw2DVertexData(data []float32, texID *TexID, mat *geom.Mat
 
 	w.window.w2D.slice.SetLen(len(data) / 8)
 	w.window.w2D.slice.SetVertexData(data)
+	//gl.Viewport(0, 0, 640, 480)
 	w.window.w2D.slice.Draw()
 }
 
 func (w *WinCanvas) Draw3DVertexData(data []float32, texID *TexID, mat *geom.Mat4) {
 	gl.Enable(gl.DEPTH_TEST)
-	id := w.window.whiteTexID
-	if texID != nil {
-		id = *texID
-	}
-	tex := w.window.textures[id].Texture()
+	tex := w.window.getTexture(texID)
 
 	w.window.w3D.shader.Begin()
 	w.window.w3D.slice.Begin()
-	tex.Begin()
-	defer tex.End()
+	tex.frame.Texture().Begin()
+	defer tex.frame.Texture().End()
 	defer w.window.w3D.slice.End()
 	defer w.window.w3D.shader.End()
 
@@ -76,6 +77,10 @@ func (w *WinCanvas) GetFrameSize() geom.Vec2 {
 		w.window.GetFrameRect().Width(),
 		w.window.GetFrameRect().Height(),
 	}
+}
+
+func (w *WinCanvas) getWindow() *Win {
+	return w.window
 }
 
 func (w *WinCanvas) setMatrix2D(m geom.Mat3) {

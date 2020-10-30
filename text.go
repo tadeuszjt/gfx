@@ -4,7 +4,7 @@ import (
 	"github.com/golang/freetype/truetype"
 	"github.com/tadeuszjt/geom/32"
 	"golang.org/x/image/font"
-	"golang.org/x/image/font/gofont/goregular"
+	"golang.org/x/image/font/gofont/gomono"
 	"golang.org/x/image/math/fixed"
 	"image"
 )
@@ -16,20 +16,16 @@ const (
 )
 
 var (
-	trueTypeFont, _ = truetype.Parse(goregular.TTF)
+	trueTypeFont, _ = truetype.Parse(gomono.TTF)
 )
 
 func (w *Win) setupText() {
-	w.textTexID = w.loadTextureFromPixels(
-		textTexWidth,
-		textTexHeight,
-		false,
-		image.NewRGBA(image.Rect(0, 0, textTexWidth, textTexHeight)).Pix)
+	w.textTexID = w.LoadTextureBlank(textTexWidth, textTexHeight)
 }
 
 type Text struct {
 	str  string
-	size float64
+	size int
 	w, h int
 	face font.Face
 	img  *image.RGBA
@@ -48,7 +44,7 @@ func (t *Text) SetString(str string) {
 	}
 
 	bounds, _ := font.BoundString(t.face, t.str)
-	t.w, t.h = bounds.Max.X.Ceil(), (-bounds.Min.Y).Ceil()+int(t.size*0.4)
+	t.w, t.h = bounds.Max.X.Ceil(), (-bounds.Min.Y).Ceil()+(t.size*2)/5
 	t.img = image.NewRGBA(image.Rect(0, 0, t.w, t.h))
 
 	d := &font.Drawer{
@@ -60,10 +56,10 @@ func (t *Text) SetString(str string) {
 	d.DrawString(t.str)
 }
 
-func (t *Text) SetSize(size float64) {
+func (t *Text) SetSize(size int) {
 	t.size = size
 	t.face = truetype.NewFace(trueTypeFont, &truetype.Options{
-		Size:    size,
+		Size:    float64(size),
 		DPI:     textDPI,
 		Hinting: font.HintingFull,
 	})
@@ -71,15 +67,20 @@ func (t *Text) SetSize(size float64) {
 	t.SetString(t.str)
 }
 
-func (w *WinCanvas) DrawText(text *Text, pos geom.Vec2) {
-	if text.img == nil {
+func (t *Text) Size() int {
+	return t.size
+}
+
+func DrawText(c Canvas, text *Text, pos geom.Vec2) {
+	if text.img == nil || text.str == "" {
 		return
 	}
 
-	tex := w.window.textures[w.window.textTexID].Texture()
-	tex.Begin()
-	tex.SetPixels(0, 0, text.w, text.h, text.img.Pix)
-	tex.End()
+	win := c.getWindow()
+	tex := win.getTexture(&win.textTexID)
+	tex.frame.Texture().Begin()
+	tex.frame.Texture().SetPixels(0, 0, text.w, text.h, text.img.Pix)
+	tex.frame.Texture().End()
 
 	W, H := float32(text.w), float32(text.h)
 	strRect := geom.MakeRect(W, H, pos)
@@ -88,7 +89,6 @@ func (w *WinCanvas) DrawText(text *Text, pos geom.Vec2) {
 	texCoords := texRect.Verts()
 	verts := strRect.Verts()
 	col := White
-	mat := geom.Mat3Identity()
 	data := make([]float32, 0, 6*8)
 
 	for _, j := range [6]int{0, 1, 2, 0, 2, 3} {
@@ -100,5 +100,5 @@ func (w *WinCanvas) DrawText(text *Text, pos geom.Vec2) {
 		)
 	}
 
-	w.Draw2DVertexData(data, &w.window.textTexID, &mat)
+	c.Draw2DVertexData(data, &win.textTexID, nil)
 }

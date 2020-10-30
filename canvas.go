@@ -6,10 +6,9 @@ import (
 
 type Canvas interface {
 	Clear(col Colour)
-	//Size() geom.Vec2
-	//DrawOn(c Canvas, mat *geom.Mat3)
 	Draw2DVertexData(data []float32, texID *TexID, mat *geom.Mat3)
 	Draw3DVertexData(data []float32, texID *TexID, mat *geom.Mat4)
+	getWindow() *Win
 }
 
 func Draw3DArrow(c Canvas, start, end geom.Vec3, colour Colour, scale float32, view geom.Mat4) {
@@ -85,7 +84,7 @@ func Draw3DArrow(c Canvas, start, end geom.Vec3, colour Colour, scale float32, v
 	c.Draw3DVertexData(tailData, nil, &tailMat)
 }
 
-func DrawSprite(c Canvas, ori geom.Ori2, rec geom.Rect, col Colour, mat geom.Mat3, tex TexID) {
+func DrawSprite(c Canvas, ori geom.Ori2, rec geom.Rect, col Colour, mat *geom.Mat3, tex *TexID) {
 	texCoords := [4]geom.Vec2{{0, 0}, {1, 0}, {1, 1}, {0, 1}}
 	data := make([]float32, 0, 6*8)
 
@@ -104,5 +103,5 @@ func DrawSprite(c Canvas, ori geom.Ori2, rec geom.Rect, col Colour, mat geom.Mat
 		)
 	}
 
-	c.Draw2DVertexData(data, &tex, &mat)
+	c.Draw2DVertexData(data, tex, mat)
 }

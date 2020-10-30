@@ -63,13 +63,14 @@ func run() {
 	}
 
 	shouldQuit := false
+	winDraw := WinCanvas{window: &win}
+
 	for !shouldQuit {
 		mainthread.Call(func() {
 			if win.glfwWin.ShouldClose() {
 				shouldQuit = true
 			}
 
-			winDraw := WinCanvas{window: &win}
 			winDraw.Clear(White)
 			winConfig.DrawFunc(&winDraw)
 
