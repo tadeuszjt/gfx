@@ -7,12 +7,15 @@ import (
 	"github.com/tadeuszjt/geom/32"
 )
 
-type TexID int
+type TexID struct{
+    texIdx int
+    texNum int
+}
 
 type texture struct {
+    texNum      int         // unique id
 	isMipmapped bool
-	isSmooth    bool
-	frame       *glhf.Frame
+	frame       *glhf.Frame // nil if dead
 }
 
 type Win struct {
@@ -23,9 +26,10 @@ type Win struct {
 		shader *glhf.Shader
 	}
 
-	textures   []texture
-	whiteTexID TexID
-	textTexID  TexID
+    textureCount int
+	textures     []texture
+	whiteTexID   TexID
+	textTexID    TexID
 }
 
 func (w *Win) GetFrameRect() geom.Rect {
@@ -39,33 +43,60 @@ func (w *Win) GetGlfwWindow() *glfw.Window {
 
 func (w *Win) getTexture(id *TexID) *texture {
 	if id == nil {
-		return &w.textures[w.whiteTexID]
+        return w.getTexture(&w.whiteTexID)
 	}
+    tex := &w.textures[(*id).texIdx]
+    if (*id).texNum != tex.texNum {
+        panic("invalid TexID")
+    }
+	return tex
+}
 
-	if *id <= 0 || int(*id) >= len(w.textures) {
-		panic("invalid texture ID")
-	}
+func (w *Win) addTexture(isMipmapped bool, frame *glhf.Frame) TexID {
+    num := w.textureCount
+    w.textureCount++
 
-	return &w.textures[*id]
+    tex := texture{
+        texNum: num,
+        isMipmapped: isMipmapped,
+        frame: frame,
+    }
+
+    for i := range w.textures {
+        if w.textures[i].frame == nil {
+            w.textures[i] = tex
+            return TexID{texNum: num, texIdx: i}
+        }
+    }
+
+    id := TexID{texIdx: len(w.textures), texNum: num}
+    w.textures = append(w.textures, tex)
+    return id
+}
+
+func (w *Win) FreeTexture(texID TexID) {
+    for i := range w.textures {
+        if w.textures[i].texNum == texID.texNum {
+            w.textures[i].frame = nil
+            w.textures[i].texNum = -1
+            return
+        }
+    }
+    panic("invalid TexID")
 }
 
 func (w *Win) LoadTextureFromFile(path string) (TexID, error) {
 	width, height, pixels, err := loadImage(path)
 	if err != nil {
-		return 0, err
+		return TexID{}, err
 	}
 
-	tex := texture{
-		isMipmapped: false,
-		frame:       glhf.NewFrame(width, height, false),
-	}
+    frame := glhf.NewFrame(width, height, false)
+	frame.Texture().Begin()
+	frame.Texture().SetPixels(0, 0, width, height, pixels)
+	frame.Texture().End()
 
-	tex.frame.Texture().Begin()
-	tex.frame.Texture().SetPixels(0, 0, width, height, pixels)
-	tex.frame.Texture().End()
-
-	w.textures = append(w.textures, tex)
-	return TexID(len(w.textures) - 1), nil
+	return w.addTexture(false, frame), nil
 
 	//	tex := w.textures[id].Texture()
 	//	tex.Begin()
@@ -75,26 +106,15 @@ func (w *Win) LoadTextureFromFile(path string) (TexID, error) {
 }
 
 func (w *Win) LoadTextureFromPixels(width, height int, pixels []uint8) TexID {
-	tex := texture{
-		isMipmapped: false,
-		frame:       glhf.NewFrame(width, height, false),
-	}
+	frame := glhf.NewFrame(width, height, false)
+	frame.Texture().Begin()
+	frame.Texture().SetPixels(0, 0, width, height, pixels)
+	frame.Texture().End()
 
-	tex.frame.Texture().Begin()
-	tex.frame.Texture().SetPixels(0, 0, width, height, pixels)
-	tex.frame.Texture().End()
-
-	w.textures = append(w.textures, tex)
-	return TexID(len(w.textures) - 1)
+	return w.addTexture(false, frame)
 }
 
 func (w *Win) LoadTextureBlank(width, height int) TexID {
-	tex := texture{
-		isMipmapped: false,
-		isSmooth:    false,
-		frame:       glhf.NewFrame(width, height, false),
-	}
-
-	w.textures = append(w.textures, tex)
-	return TexID(len(w.textures) - 1)
+	frame := glhf.NewFrame(width, height, false)
+	return w.addTexture(false, frame)
 }

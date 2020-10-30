@@ -23,12 +23,14 @@ func run() {
 	}()
 
 	var (
-		win Win
+		win *Win
 		err error
 	)
 
 	mainthread.Call(func() {
 		glfw.Init()
+
+        win = &Win{}
 
 		err = win.createGlfwWindow(winConfig)
 		if err != nil {
@@ -63,7 +65,7 @@ func run() {
 	}
 
 	shouldQuit := false
-	winDraw := WinCanvas{window: &win}
+	winDraw := WinCanvas{window: win}
 
 	for !shouldQuit {
 		mainthread.Call(func() {

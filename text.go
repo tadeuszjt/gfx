@@ -19,10 +19,6 @@ var (
 	trueTypeFont, _ = truetype.Parse(gomono.TTF)
 )
 
-func (w *Win) setupText() {
-	w.textTexID = w.LoadTextureBlank(textTexWidth, textTexHeight)
-}
-
 type Text struct {
 	str  string
 	size int
