@@ -11,7 +11,7 @@ import (
 
 const (
 	textDPI       = 72
-	textTexWidth  = 2048
+	textTexWidth  = 1024
 	textTexHeight = 256
 )
 
@@ -67,6 +67,10 @@ func (t *Text) Size() int {
 	return t.size
 }
 
+func (t *Text) CharWidth() float64 {
+    return float64(font.MeasureString(t.face, "          ").Ceil()) / 10.
+}
+
 func DrawText(c Canvas, text *Text, pos geom.Vec2) {
 	if text.img == nil || text.str == "" {
 		return
@@ -80,7 +84,7 @@ func DrawText(c Canvas, text *Text, pos geom.Vec2) {
 
 	W, H := float32(text.w), float32(text.h)
 	strRect := geom.MakeRect(W, H, pos)
-	texRect := geom.RectOrigin(W/textTexWidth, H/textTexHeight)
+	texRect := geom.RectOrigin(W/float32(textTexWidth), H/float32(textTexHeight))
 
 	texCoords := texRect.Verts()
 	verts := strRect.Verts()

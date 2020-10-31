@@ -74,6 +74,14 @@ func (w *Win) addTexture(isMipmapped bool, frame *glhf.Frame) TexID {
     return id
 }
 
+func (w *Win) GetTextureCanvas(texID TexID) texCanvas {
+	w.getTexture(&texID)
+	return texCanvas{
+		win:   w,
+		texID: texID,
+	}
+}
+
 func (w *Win) FreeTexture(texID TexID) {
     for i := range w.textures {
         if w.textures[i].texNum == texID.texNum {

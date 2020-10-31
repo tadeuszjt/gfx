@@ -56,7 +56,7 @@ func run() {
 		}
 
 		frame := win.GetFrameRect()
-		winConfig.ResizeFunc(int(frame.Width()), int(frame.Height()))
+		winConfig.ResizeFunc(win, int(frame.Width()), int(frame.Height()))
 	})
 
 	if err != nil {
@@ -65,16 +65,15 @@ func run() {
 	}
 
 	shouldQuit := false
-	winDraw := WinCanvas{window: win}
-
 	for !shouldQuit {
 		mainthread.Call(func() {
 			if win.glfwWin.ShouldClose() {
 				shouldQuit = true
 			}
 
-			winDraw.Clear(White)
-			winConfig.DrawFunc(&winDraw)
+            c := &WinCanvas{window: win}
+            c.Clear(White)
+            winConfig.DrawFunc(win, c)
 
 			win.glfwWin.SwapBuffers()
 			glfw.PollEvents()

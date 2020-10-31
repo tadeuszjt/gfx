@@ -18,14 +18,6 @@ func (w *WinCanvas) Clear(col Colour) {
 	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 }
 
-func (w *WinCanvas) GetTextureCanvas(texID TexID) texCanvas {
-	w.window.getTexture(&texID)
-	return texCanvas{
-		win:   w.window,
-		texID: texID,
-	}
-}
-
 func (w *WinCanvas) Draw2DVertexData(data []float32, texID *TexID, mat *geom.Mat3) {
 	tex := w.window.getTexture(texID)
 
