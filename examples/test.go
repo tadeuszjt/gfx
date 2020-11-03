@@ -9,7 +9,7 @@ const (
     height = 480
 )
 
-func draw(w *gfx.WinCanvas) {
+func draw(w *gfx.Win, c gfx.Canvas) {
 	triangle := []float32{
 		width*0.5, height*0.4,
 		0, 0,
@@ -22,7 +22,7 @@ func draw(w *gfx.WinCanvas) {
 		0, 0, 1, 1,
 	}
 
-	w.Draw2DVertexData(triangle, nil, nil)
+	c.Draw2DVertexData(triangle, nil, nil)
 }
 
 func main() {

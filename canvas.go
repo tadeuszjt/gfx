@@ -11,6 +11,19 @@ type Canvas interface {
 	getWindow() *Win
 }
 
+func DrawRect(c Canvas, texID *TexID, rect, texRect geom.Rect) {
+    data := [8*6]float32{
+        rect.Min.X, rect.Min.Y, texRect.Min.X, texRect.Min.Y, 1, 1, 1, 1, 
+        rect.Max.X, rect.Min.Y, texRect.Max.X, texRect.Min.Y, 1, 1, 1, 1, 
+        rect.Max.X, rect.Max.Y, texRect.Max.X, texRect.Max.Y, 1, 1, 1, 1, 
+
+        rect.Min.X, rect.Min.Y, texRect.Min.X, texRect.Min.Y, 1, 1, 1, 1, 
+        rect.Max.X, rect.Max.Y, texRect.Max.X, texRect.Max.Y, 1, 1, 1, 1, 
+        rect.Min.X, rect.Max.Y, texRect.Min.X, texRect.Max.Y, 1, 1, 1, 1, 
+    }
+    c.Draw2DVertexData(data[:], texID, nil)
+}
+
 func Draw3DArrow(c Canvas, start, end geom.Vec3, colour Colour, scale float32, view geom.Mat4) {
 	headLength := 1. * scale
 	headWidth := 0.3 * scale

@@ -10,9 +10,8 @@ import (
 )
 
 const (
-	textDPI       = 72
-	textTexWidth  = 1024
-	textTexHeight = 256
+	textDPI         = 72
+    textDefaultSize = 12
 )
 
 var (
@@ -22,34 +21,40 @@ var (
 type Text struct {
 	str  string
 	size int
-	w, h int
 	face font.Face
 	img  *image.RGBA
 }
 
-func (t *Text) SetString(str string) {
-	t.str = str
+func MakeText() Text {
+    face := truetype.NewFace(trueTypeFont, &truetype.Options{
+        Size:    float64(textDefaultSize),
+        DPI:     textDPI,
+        Hinting: font.HintingFull,
+    })
 
-	if t.face == nil {
-		t.size = 12
-		t.face = truetype.NewFace(trueTypeFont, &truetype.Options{
-			Size:    12,
-			DPI:     textDPI,
-			Hinting: font.HintingFull,
-		})
-	}
+    return Text{
+        size: textDefaultSize,
+        face: face,
+    }
+}
 
-	bounds, _ := font.BoundString(t.face, t.str)
-	t.w, t.h = bounds.Max.X.Ceil(), (-bounds.Min.Y).Ceil()+(t.size*2)/5
-	t.img = image.NewRGBA(image.Rect(0, 0, t.w, t.h))
+func (t *Text) redraw() {
+    width := font.MeasureString(t.face, t.str).Ceil()
+	t.img = image.NewRGBA(image.Rect(0, 0, width, t.Height()))
 
 	d := &font.Drawer{
 		Dst:  t.img,
 		Src:  image.Black,
 		Face: t.face,
-		Dot:  fixed.Point26_6{X: 0, Y: -bounds.Min.Y},
+        Dot:  fixed.Point26_6{X: 0, Y: t.face.Metrics().Ascent},
 	}
+
 	d.DrawString(t.str)
+}
+
+func (t *Text) SetString(str string) {
+	t.str = str
+    t.redraw()
 }
 
 func (t *Text) SetSize(size int) {
@@ -60,15 +65,20 @@ func (t *Text) SetSize(size int) {
 		Hinting: font.HintingFull,
 	})
 
-	t.SetString(t.str)
+    t.redraw()
+}
+
+func (t *Text) Height() int {
+    metrics := t.face.Metrics()
+    return (metrics.Ascent + metrics.Descent).Ceil()
 }
 
 func (t *Text) Size() int {
 	return t.size
 }
 
-func (t *Text) CharWidth() float64 {
-    return float64(font.MeasureString(t.face, "          ").Ceil()) / 10.
+func (t *Text) GetString() string {
+    return t.str
 }
 
 func DrawText(c Canvas, text *Text, pos geom.Vec2) {
@@ -77,28 +87,13 @@ func DrawText(c Canvas, text *Text, pos geom.Vec2) {
 	}
 
 	win := c.getWindow()
-	tex := win.getTexture(&win.textTexID)
-	tex.frame.Texture().Begin()
-	tex.frame.Texture().SetPixels(0, 0, text.w, text.h, text.img.Pix)
-	tex.frame.Texture().End()
 
-	W, H := float32(text.w), float32(text.h)
+    bounds := text.img.Bounds()
+	texID := win.LoadTextureFromPixels(bounds.Max.X, bounds.Max.Y, text.img.Pix)
+
+	W, H := float32(bounds.Max.X), float32(bounds.Max.Y)
 	strRect := geom.MakeRect(W, H, pos)
-	texRect := geom.RectOrigin(W/float32(textTexWidth), H/float32(textTexHeight))
+    DrawRect(c, &texID, strRect, geom.RectOrigin(1, 1))
 
-	texCoords := texRect.Verts()
-	verts := strRect.Verts()
-	col := White
-	data := make([]float32, 0, 6*8)
-
-	for _, j := range [6]int{0, 1, 2, 0, 2, 3} {
-		data = append(
-			data,
-			verts[j].X, verts[j].Y,
-			texCoords[j].X, texCoords[j].Y,
-			col.R, col.G, col.B, col.A,
-		)
-	}
-
-	c.Draw2DVertexData(data, &win.textTexID, nil)
+    win.FreeTexture(texID)
 }

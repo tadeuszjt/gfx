@@ -52,11 +52,11 @@ func setup(w *gfx.Win) error {
 	return nil
 }
 
-func draw(w *gfx.WinCanvas) {
+func draw(w *gfx.Win, c gfx.Canvas) {
 	playerUpdate()
 
 	// 1.) Build perspective matrix which looks down Z axis for OpenGl NDC
-	size := w.GetFrameSize()
+	size := w.GetFrameRect().Max
 	ar := size.X / size.Y
 	near := float32(0.1)
 	perspective := geom.Mat4Perspective(-ar*near, ar*near, -near, near, near, 1000).Product(geom.Mat4Scalar(-1, 1, -1))
@@ -71,9 +71,9 @@ func draw(w *gfx.WinCanvas) {
 	// 3.) Sequence transformations
 	view := perspective.Product(rx).Product(ry).Product(translation)
 
-	gfx.Draw3DArrow(w, geom.Vec3{}, geom.Vec3{3, 0, 0}, gfx.Red, 2, view)
-	gfx.Draw3DArrow(w, geom.Vec3{}, geom.Vec3{0, 3, 0}, gfx.Green, 2, view)
-	gfx.Draw3DArrow(w, geom.Vec3{}, geom.Vec3{0, 0, 3}, gfx.Blue, 2, view)
+	gfx.Draw3DArrow(c, geom.Vec3{}, geom.Vec3{3, 0, 0}, gfx.Red, 2, view)
+	gfx.Draw3DArrow(c, geom.Vec3{}, geom.Vec3{0, 3, 0}, gfx.Green, 2, view)
+	gfx.Draw3DArrow(c, geom.Vec3{}, geom.Vec3{0, 0, 3}, gfx.Blue, 2, view)
 }
 
 func mouse(w *gfx.Win, ev gfx.MouseEvent) {

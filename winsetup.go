@@ -35,7 +35,6 @@ func (w *Win) makeContextCurrent() {
  */
 func (w *Win) setup(c WinConfig) error {
 	w.setupInput(&c)
-	w.textTexID = w.LoadTextureBlank(textTexWidth, textTexHeight)
 	w.whiteTexID = w.LoadTextureFromPixels(1, 1, []uint8{255, 255, 255, 255})
 
 	/* load shaders */

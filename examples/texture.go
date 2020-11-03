@@ -15,7 +15,7 @@ func setup(w *gfx.Win) error {
     return err
 }
 
-func draw(w *gfx.WinCanvas) {
+func draw(w *gfx.Win, c gfx.Canvas) {
 	data := []float32{
 		0, 0,
 		0, 0,
@@ -30,11 +30,7 @@ func draw(w *gfx.WinCanvas) {
 		1, 1, 1, 1,
 	}
 
-    //tc := w.GetTextureCanvas(texID)
-    //tc.Clear(gfx.Red)
-
-
-	w.Draw2DVertexData(data, &texID, nil)
+	c.Draw2DVertexData(data, &texID, nil)
 }
 
 func main() {
