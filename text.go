@@ -19,10 +19,13 @@ var (
 )
 
 type Text struct {
-	str  string
-	size int
-	face font.Face
-	img  *image.RGBA
+	str   string
+	size  int
+	face  font.Face
+	img   *image.RGBA
+
+    isCurrent bool
+    texID     *TexID
 }
 
 func MakeText() Text {
@@ -38,7 +41,7 @@ func MakeText() Text {
     }
 }
 
-func (t *Text) redraw() {
+func (t *Text) redrawImg() {
     width := font.MeasureString(t.face, t.str).Ceil()
 	t.img = image.NewRGBA(image.Rect(0, 0, width, t.Height()))
 
@@ -54,7 +57,8 @@ func (t *Text) redraw() {
 
 func (t *Text) SetString(str string) {
 	t.str = str
-    t.redraw()
+    t.redrawImg()
+    t.isCurrent = false
 }
 
 func (t *Text) SetSize(size int) {
@@ -65,7 +69,8 @@ func (t *Text) SetSize(size int) {
 		Hinting: font.HintingFull,
 	})
 
-    t.redraw()
+    t.redrawImg()
+    t.isCurrent = false
 }
 
 func (t *Text) Height() int {
@@ -89,11 +94,19 @@ func DrawText(c Canvas, text *Text, pos geom.Vec2) {
 	win := c.getWindow()
 
     bounds := text.img.Bounds()
-	texID := win.LoadTextureFromPixels(bounds.Max.X, bounds.Max.Y, text.img.Pix)
+    if !text.isCurrent {
+        if text.texID != nil {
+            win.FreeTexture(*text.texID)
+            text.texID = nil
+        }
+
+        id := win.LoadTextureFromPixels(bounds.Max.X, bounds.Max.Y, text.img.Pix)
+        text.texID = &id
+        text.isCurrent = true
+    }
+
 
 	W, H := float32(bounds.Max.X), float32(bounds.Max.Y)
 	strRect := geom.MakeRect(W, H, pos)
-    DrawRect(c, &texID, strRect, geom.RectOrigin(1, 1))
-
-    win.FreeTexture(texID)
+    DrawRect(c, text.texID, strRect, geom.RectOrigin(1, 1))
 }
