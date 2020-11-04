@@ -4,9 +4,9 @@ import (
 	"github.com/golang/freetype/truetype"
 	"github.com/tadeuszjt/geom/32"
 	"golang.org/x/image/font"
-	"golang.org/x/image/font/gofont/gomono"
 	"golang.org/x/image/math/fixed"
 	"image"
+    "io/ioutil"
 )
 
 const (
@@ -15,14 +15,23 @@ const (
 )
 
 var (
-	trueTypeFont, _ = truetype.Parse(gomono.TTF)
+	trueTypeFont *truetype.Font
 )
 
+func init() {
+    data, err := ioutil.ReadFile("/usr/share/fonts/TTF/LiberationMono-Regular.ttf")
+    if err != nil {
+        panic(err)
+    }
+    trueTypeFont, _ = truetype.Parse(data)
+}
+
 type Text struct {
-	str   string
-	size  int
-	face  font.Face
-	img   *image.RGBA
+	str    string
+	size   int
+	face   font.Face
+    colour Colour
+	img    *image.RGBA
 
     isCurrent bool
     texID     *TexID
@@ -36,9 +45,15 @@ func MakeText() Text {
     })
 
     return Text{
-        size: textDefaultSize,
-        face: face,
+        size:   textDefaultSize,
+        face:   face,
+        colour: Black,
     }
+}
+
+func (t *Text) SetColour(col Colour) {
+    t.colour = col
+    t.redrawImg()
 }
 
 func (t *Text) redrawImg() {
@@ -47,18 +62,18 @@ func (t *Text) redrawImg() {
 
 	d := &font.Drawer{
 		Dst:  t.img,
-		Src:  image.Black,
+		Src:  image.NewUniform(t.colour),
 		Face: t.face,
         Dot:  fixed.Point26_6{X: 0, Y: t.face.Metrics().Ascent},
 	}
 
 	d.DrawString(t.str)
+    t.isCurrent = false
 }
 
 func (t *Text) SetString(str string) {
 	t.str = str
     t.redrawImg()
-    t.isCurrent = false
 }
 
 func (t *Text) SetSize(size int) {
@@ -70,12 +85,16 @@ func (t *Text) SetSize(size int) {
 	})
 
     t.redrawImg()
-    t.isCurrent = false
 }
 
 func (t *Text) Height() int {
     metrics := t.face.Metrics()
     return (metrics.Ascent + metrics.Descent).Ceil()
+}
+
+func (t *Text) CharWidth() fixed.Int26_6 {
+    f, _ := t.face.GlyphAdvance(' ')
+    return f
 }
 
 func (t *Text) Size() int {

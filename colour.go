@@ -2,6 +2,7 @@ package gfx
 
 import (
 	"math/rand"
+    "image/color"
 )
 
 var (
@@ -14,6 +15,24 @@ var (
 
 type Colour struct {
 	R, G, B, A float32
+}
+
+func (c Colour) RGBA() (r, g, b, a uint32) {
+    return color.RGBA64{
+        uint16(c.R*65535.),
+        uint16(c.G*65535.),
+        uint16(c.B*65535.),
+        uint16(c.A*65535.),
+    }.RGBA()
+}
+
+func ColourRGBA(r, g, b, a uint8) Colour {
+    return Colour{
+        float32(r)/255.,
+        float32(g)/255.,
+        float32(b)/255.,
+        float32(a)/255.,
+    }
 }
 
 func ColourRand() Colour {
