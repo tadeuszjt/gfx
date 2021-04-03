@@ -80,6 +80,14 @@ func (w *Win) GetTextureCanvas(texID TexID) texCanvas {
 	}
 }
 
+func (win *Win) SetTexturePixels(id TexID, x, y, w, h int, pixels []uint8) {
+    texture := win.getTexture(&id)
+    texture.frame.Texture().Begin()
+    texture.frame.Texture().SetPixels(x, y, w, h, pixels)
+    texture.frame.Texture().End()
+}
+
+
 func (w *Win) FreeTexture(texID TexID) {
     for i := range w.textures {
         if w.textures[i].texNum == texID.texNum {

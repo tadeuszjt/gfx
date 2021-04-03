@@ -33,7 +33,7 @@ func (w *Win) setupInput(c *WinConfig) {
 	w.glfwWin.SetFramebufferSizeCallback(
 		func(_ *glfw.Window, width, height int) {
 			gl.Viewport(0, 0, int32(width), int32(height))
-			c.ResizeFunc(w, width, height)
+			c.ResizeFunc(w)
 		})
 
 	w.glfwWin.SetCursorPosCallback(

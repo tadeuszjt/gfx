@@ -51,6 +51,12 @@ func MakeText() Text {
     }
 }
 
+func (t *Text) Free(w *Win) {
+    if t.texID != nil {
+        w.FreeTexture(*t.texID)
+    }
+}
+
 func (t *Text) SetColour(col Colour) {
     t.colour = col
     t.redrawImg()
@@ -126,6 +132,6 @@ func DrawText(c Canvas, text *Text, pos geom.Vec2) {
 
 
 	W, H := float32(bounds.Max.X), float32(bounds.Max.Y)
-	strRect := geom.MakeRect(W, H, pos)
-    DrawRect(c, text.texID, strRect, geom.RectOrigin(1, 1))
+	strRect := geom.MakeRect(pos.X, pos.Y, W, H)
+    DrawRect(c, text.texID, White, strRect, geom.RectOrigin(1, 1))
 }

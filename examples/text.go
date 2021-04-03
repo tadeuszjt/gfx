@@ -22,6 +22,7 @@ func draw(w *gfx.Win, c gfx.Canvas) {
     tc.Clear(gfx.Red)
     gfx.DrawSprite(tc, geom.Ori2{}, geom.RectOrigin(10, 10), gfx.Green, nil, nil)
     gfx.DrawText(tc, &text, geom.Vec2{})
+
     gfx.DrawSprite(c, geom.Ori2{}, geom.RectOrigin(100, 100), gfx.White, nil, &tex)
     gfx.DrawSprite(c, geom.Ori2{100, 100, 0}, geom.RectOrigin(100, 100), gfx.White, nil, &tex)
 }

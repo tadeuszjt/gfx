@@ -11,15 +11,15 @@ type Canvas interface {
 	getWindow() *Win
 }
 
-func DrawRect(c Canvas, texID *TexID, rect, texRect geom.Rect) {
+func DrawRect(c Canvas, texID *TexID, col Colour, rect, texRect geom.Rect) {
     data := [8*6]float32{
-        rect.Min.X, rect.Min.Y, texRect.Min.X, texRect.Min.Y, 1, 1, 1, 1, 
-        rect.Max.X, rect.Min.Y, texRect.Max.X, texRect.Min.Y, 1, 1, 1, 1, 
-        rect.Max.X, rect.Max.Y, texRect.Max.X, texRect.Max.Y, 1, 1, 1, 1, 
+        rect.Min.X, rect.Min.Y, texRect.Min.X, texRect.Min.Y, col.R, col.G, col.B, col.A, 
+        rect.Max.X, rect.Min.Y, texRect.Max.X, texRect.Min.Y, col.R, col.G, col.B, col.A, 
+        rect.Max.X, rect.Max.Y, texRect.Max.X, texRect.Max.Y, col.R, col.G, col.B, col.A, 
 
-        rect.Min.X, rect.Min.Y, texRect.Min.X, texRect.Min.Y, 1, 1, 1, 1, 
-        rect.Max.X, rect.Max.Y, texRect.Max.X, texRect.Max.Y, 1, 1, 1, 1, 
-        rect.Min.X, rect.Max.Y, texRect.Min.X, texRect.Max.Y, 1, 1, 1, 1, 
+        rect.Min.X, rect.Min.Y, texRect.Min.X, texRect.Min.Y, col.R, col.G, col.B, col.A, 
+        rect.Max.X, rect.Max.Y, texRect.Max.X, texRect.Max.Y, col.R, col.G, col.B, col.A, 
+        rect.Min.X, rect.Max.Y, texRect.Min.X, texRect.Max.Y, col.R, col.G, col.B, col.A, 
     }
     c.Draw2DVertexData(data[:], texID, nil)
 }

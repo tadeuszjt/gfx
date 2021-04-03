@@ -23,14 +23,12 @@ func run() {
 	}()
 
 	var (
-		win *Win
+		win *Win = &Win{}
 		err error
 	)
 
 	mainthread.Call(func() {
 		glfw.Init()
-
-        win = &Win{}
 
 		err = win.createGlfwWindow(winConfig)
 		if err != nil {
@@ -54,9 +52,7 @@ func run() {
 		if err != nil {
 			return
 		}
-
-		frame := win.GetFrameRect()
-		winConfig.ResizeFunc(win, int(frame.Width()), int(frame.Height()))
+		winConfig.ResizeFunc(win)
 	})
 
 	if err != nil {
