@@ -3,7 +3,7 @@ package gfx
 import (
 	"github.com/go-gl/gl/v3.3-core/gl"
 	"github.com/go-gl/mathgl/mgl32"
-	"github.com/tadeuszjt/geom/32"
+	geom "github.com/tadeuszjt/geom/32"
 )
 
 type WinCanvas struct {
@@ -16,6 +16,10 @@ func (w *WinCanvas) Clear(col Colour) {
 
 	gl.ClearColor(col.R, col.G, col.B, col.A)
 	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+}
+
+func (w *WinCanvas) Size() geom.Vec2 {
+	return w.window.Size()
 }
 
 func (w *WinCanvas) Draw2DVertexData(data []float32, texID *TexID, mat *geom.Mat3) {
@@ -64,19 +68,12 @@ func (w *WinCanvas) Draw3DVertexData(data []float32, texID *TexID, mat *geom.Mat
 	gl.Disable(gl.DEPTH_TEST)
 }
 
-func (w *WinCanvas) GetFrameSize() geom.Vec2 {
-	return geom.Vec2{
-		w.window.GetFrameRect().Width(),
-		w.window.GetFrameRect().Height(),
-	}
-}
-
 func (w *WinCanvas) getWindow() *Win {
 	return w.window
 }
 
 func (w *WinCanvas) setMatrix2D(m geom.Mat3) {
-	frameSize := w.GetFrameSize()
+	frameSize := w.Size()
 	worldToGL := geom.Mat3Camera2D(
 		geom.RectOrigin(frameSize.X, frameSize.Y),
 		geom.RectCentred(2, -2),

@@ -3,12 +3,13 @@ package gfx
 import (
 	"bufio"
 	"fmt"
-	"github.com/go-gl/gl/v3.3-core/gl"
-	"github.com/go-gl/mathgl/mgl32"
-	"github.com/tadeuszjt/geom/32"
 	"image"
 	_ "image/png"
 	"os"
+
+	"github.com/go-gl/gl/v3.3-core/gl"
+	"github.com/go-gl/mathgl/mgl32"
+	geom "github.com/tadeuszjt/geom/32"
 )
 
 type texCanvas struct {
@@ -23,6 +24,10 @@ func (t texCanvas) Clear(col Colour) {
 	gl.ClearColor(col.R, col.G, col.B, col.A)
 	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 	tex.frame.End()
+}
+
+func (t texCanvas) Size() geom.Vec2 {
+	return t.win.Size()
 }
 
 func (t texCanvas) Draw2DVertexData(data []float32, texID *TexID, mat *geom.Mat3) {

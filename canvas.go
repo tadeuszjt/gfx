@@ -1,27 +1,27 @@
 package gfx
 
 import (
-	"github.com/tadeuszjt/geom/32"
+	geom "github.com/tadeuszjt/geom/32"
 )
 
 type Canvas interface {
 	Clear(col Colour)
 	Draw2DVertexData(data []float32, texID *TexID, mat *geom.Mat3)
 	Draw3DVertexData(data []float32, texID *TexID, mat *geom.Mat4)
-	getWindow() *Win
+	Size() geom.Vec2
 }
 
 func DrawRect(c Canvas, texID *TexID, col Colour, rect, texRect geom.Rect) {
-    data := [8*6]float32{
-        rect.Min.X, rect.Min.Y, texRect.Min.X, texRect.Min.Y, col.R, col.G, col.B, col.A, 
-        rect.Max.X, rect.Min.Y, texRect.Max.X, texRect.Min.Y, col.R, col.G, col.B, col.A, 
-        rect.Max.X, rect.Max.Y, texRect.Max.X, texRect.Max.Y, col.R, col.G, col.B, col.A, 
+	data := [8 * 6]float32{
+		rect.Min.X, rect.Min.Y, texRect.Min.X, texRect.Min.Y, col.R, col.G, col.B, col.A,
+		rect.Max.X, rect.Min.Y, texRect.Max.X, texRect.Min.Y, col.R, col.G, col.B, col.A,
+		rect.Max.X, rect.Max.Y, texRect.Max.X, texRect.Max.Y, col.R, col.G, col.B, col.A,
 
-        rect.Min.X, rect.Min.Y, texRect.Min.X, texRect.Min.Y, col.R, col.G, col.B, col.A, 
-        rect.Max.X, rect.Max.Y, texRect.Max.X, texRect.Max.Y, col.R, col.G, col.B, col.A, 
-        rect.Min.X, rect.Max.Y, texRect.Min.X, texRect.Max.Y, col.R, col.G, col.B, col.A, 
-    }
-    c.Draw2DVertexData(data[:], texID, nil)
+		rect.Min.X, rect.Min.Y, texRect.Min.X, texRect.Min.Y, col.R, col.G, col.B, col.A,
+		rect.Max.X, rect.Max.Y, texRect.Max.X, texRect.Max.Y, col.R, col.G, col.B, col.A,
+		rect.Min.X, rect.Max.Y, texRect.Min.X, texRect.Max.Y, col.R, col.G, col.B, col.A,
+	}
+	c.Draw2DVertexData(data[:], texID, nil)
 }
 
 func Draw3DArrow(c Canvas, start, end geom.Vec3, colour Colour, scale float32, view geom.Mat4) {
