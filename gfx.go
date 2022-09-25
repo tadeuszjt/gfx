@@ -38,6 +38,7 @@ func run() {
 		/* OpenGL context setup */
 		win.makeContextCurrent()
         glfw.SwapInterval(1) // vsync enabled
+        fmt.Println("vsync set enabled")
 		glhf.Init()
 		gl.Enable(gl.BLEND)
 		glhf.BlendFunc(glhf.SrcAlpha, glhf.OneMinusSrcAlpha)
