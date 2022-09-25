@@ -5,14 +5,14 @@ import (
 )
 
 var (
-    texID gfx.TexID
+	texID gfx.TexID
 )
 
 func setup(w *gfx.Win) error {
-    var err error
-    texID, err = w.LoadTextureFromFile("picture.png")
+	var err error
+	texID, err = w.LoadTextureFromFile("picture.png")
 
-    return err
+	return err
 }
 
 func draw(w *gfx.Win, c gfx.Canvas) {
@@ -35,8 +35,8 @@ func draw(w *gfx.Win, c gfx.Canvas) {
 
 func main() {
 	gfx.RunWindow(gfx.WinConfig{
-        SetupFunc: setup,
-		DrawFunc: draw,
-		Title:    "Triangle",
+		SetupFunc: setup,
+		DrawFunc:  draw,
+		Title:     "Triangle",
 	})
 }
