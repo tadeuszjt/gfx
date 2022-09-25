@@ -12,6 +12,7 @@ require (
 )
 
 require (
+	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20220806181222-55e207c401ad // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	golang.org/x/image v0.0.0-20190321063152-3fc05d484e9f // indirect
 )
