@@ -56,7 +56,7 @@ func draw(w *gfx.Win, c gfx.Canvas) {
 	playerUpdate()
 
 	// 1.) Build perspective matrix which looks down Z axis for OpenGl NDC
-	size := w.GetFrameRect().Max
+	size := w.Size()
 	ar := size.X / size.Y
 	near := float32(0.1)
 	perspective := geom.Mat4Perspective(-ar*near, ar*near, -near, near, near, 1000).Product(geom.Mat4Scalar(-1, 1, -1))
