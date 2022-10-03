@@ -9,7 +9,7 @@ import (
 
 	"github.com/go-gl/gl/v3.3-core/gl"
 	"github.com/go-gl/mathgl/mgl32"
-	geom "github.com/tadeuszjt/geom/32"
+	"github.com/tadeuszjt/geom/generic"
 )
 
 type texCanvas struct {
@@ -26,11 +26,11 @@ func (t texCanvas) Clear(col Colour) {
 	tex.frame.End()
 }
 
-func (t texCanvas) Size() geom.Vec2 {
+func (t texCanvas) Size() geom.Vec2[float32] {
 	return t.win.Size()
 }
 
-func (t texCanvas) Draw2DVertexData(data []float32, texID *TexID, mat *geom.Mat3) {
+func (t texCanvas) Draw2DVertexData(data []float32, texID *TexID, mat *geom.Mat3[float32]) {
 	win := t.getWindow()
 	tex := win.getTexture(texID)
 	frame := win.getTexture(&t.texID).frame
@@ -48,10 +48,10 @@ func (t texCanvas) Draw2DVertexData(data []float32, texID *TexID, mat *geom.Mat3
 
 	toNDC := geom.Mat3Camera2D(
 		geom.RectOrigin(float32(width), float32(height)),
-		geom.RectCentred(2, 2),
+		geom.RectCentred[float32](2, 2),
 	)
 
-	var m geom.Mat3
+	var m geom.Mat3[float32]
 	if mat != nil {
 		m = toNDC.Product(*mat)
 	} else {
@@ -74,7 +74,7 @@ func (t texCanvas) Draw2DVertexData(data []float32, texID *TexID, mat *geom.Mat3
 	gl.Viewport(i[0], i[1], i[2], i[3])
 }
 
-func (t texCanvas) Draw3DVertexData(data []float32, texID *TexID, mat *geom.Mat4) {
+func (t texCanvas) Draw3DVertexData(data []float32, texID *TexID, mat *geom.Mat4[float32]) {
 	panic("")
 }
 

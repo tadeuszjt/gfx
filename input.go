@@ -3,7 +3,7 @@ package gfx
 import (
 	"github.com/go-gl/gl/v3.3-core/gl"
 	"github.com/go-gl/glfw/v3.3/glfw"
-	"github.com/tadeuszjt/geom/32"
+	"github.com/tadeuszjt/geom/generic"
 )
 
 type MouseEvent interface {
@@ -14,7 +14,7 @@ type MouseScroll struct {
 }
 
 type MouseMove struct {
-	Position geom.Vec2
+	Position geom.Vec2[float32]
 }
 
 type MouseButton struct {
@@ -38,7 +38,7 @@ func (w *Win) setupInput(c *WinConfig) {
 
 	w.glfwWin.SetCursorPosCallback(
 		func(_ *glfw.Window, xpos, ypos float64) {
-			c.MouseFunc(w, MouseMove{geom.Vec2{float32(xpos), float32(ypos)}})
+			c.MouseFunc(w, MouseMove{geom.Vec2[float32]{float32(xpos), float32(ypos)}})
 		})
 
 	w.glfwWin.SetScrollCallback(

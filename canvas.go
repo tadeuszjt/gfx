@@ -1,17 +1,17 @@
 package gfx
 
 import (
-	geom "github.com/tadeuszjt/geom/32"
+	geom "github.com/tadeuszjt/geom/generic"
 )
 
 type Canvas interface {
 	Clear(col Colour)
-	Draw2DVertexData(data []float32, texID *TexID, mat *geom.Mat3)
-	Draw3DVertexData(data []float32, texID *TexID, mat *geom.Mat4)
-	Size() geom.Vec2
+	Draw2DVertexData(data []float32, texID *TexID, mat *geom.Mat3[float32])
+	Draw3DVertexData(data []float32, texID *TexID, mat *geom.Mat4[float32])
+	Size() geom.Vec2[float32]
 }
 
-func DrawRect(c Canvas, texID *TexID, col Colour, rect, texRect geom.Rect) {
+func DrawRect(c Canvas, texID *TexID, col Colour, rect, texRect geom.Rect[float32]) {
 	data := [8 * 6]float32{
 		rect.Min.X, rect.Min.Y, texRect.Min.X, texRect.Min.Y, col.R, col.G, col.B, col.A,
 		rect.Max.X, rect.Min.Y, texRect.Max.X, texRect.Min.Y, col.R, col.G, col.B, col.A,
@@ -24,12 +24,12 @@ func DrawRect(c Canvas, texID *TexID, col Colour, rect, texRect geom.Rect) {
 	c.Draw2DVertexData(data[:], texID, nil)
 }
 
-func Draw3DArrow(c Canvas, start, end geom.Vec3, colour Colour, scale float32, view geom.Mat4) {
+func Draw3DArrow(c Canvas, start, end geom.Vec3[float32], colour Colour, scale float32, view geom.Mat4[float32]) {
 	headLength := 1. * scale
 	headWidth := 0.3 * scale
 	tailWidth := 0.1 * scale
 
-	headVerts := []geom.Vec3{
+	headVerts := []geom.Vec3[float32]{
 		{0, 0, 0},
 		{1, 1, -1},
 		{1, -1, -1},
@@ -56,7 +56,7 @@ func Draw3DArrow(c Canvas, start, end geom.Vec3, colour Colour, scale float32, v
 	headMat := view.Product(headModel)
 	c.Draw3DVertexData(headData, nil, &headMat)
 
-	tailVerts := []geom.Vec3{
+	tailVerts := []geom.Vec3[float32]{
 		{1, 1, 0},
 		{1, -1, 0},
 		{-1, -1, 0},
@@ -97,8 +97,8 @@ func Draw3DArrow(c Canvas, start, end geom.Vec3, colour Colour, scale float32, v
 	c.Draw3DVertexData(tailData, nil, &tailMat)
 }
 
-func DrawSprite(c Canvas, ori geom.Ori2, rec geom.Rect, col Colour, mat *geom.Mat3, tex *TexID) {
-	texCoords := [4]geom.Vec2{{0, 0}, {1, 0}, {1, 1}, {0, 1}}
+func DrawSprite(c Canvas, ori geom.Ori2[float32], rec geom.Rect[float32], col Colour, mat *geom.Mat3[float32], tex *TexID) {
+	texCoords := [4]geom.Vec2[float32]{{0, 0}, {1, 0}, {1, 1}, {0, 1}}
 	data := make([]float32, 0, 6*8)
 
 	m := ori.Mat3Transform()

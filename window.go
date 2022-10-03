@@ -3,7 +3,7 @@ package gfx
 import (
 	"github.com/faiface/glhf"
 	"github.com/go-gl/glfw/v3.3/glfw"
-	geom "github.com/tadeuszjt/geom/32"
+	"github.com/tadeuszjt/geom/generic"
 )
 
 type TexID struct {
@@ -30,9 +30,9 @@ type Win struct {
 	whiteTexID   TexID
 }
 
-func (w *Win) Size() geom.Vec2 {
+func (w *Win) Size() geom.Vec2[float32] {
 	width, height := w.glfwWin.GetFramebufferSize()
-	return geom.Vec2{float32(width), float32(height)}
+	return geom.Vec2[float32]{float32(width), float32(height)}
 }
 
 func (w *Win) GetGlfwWindow() *glfw.Window {

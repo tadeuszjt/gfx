@@ -37,8 +37,8 @@ func run() {
 
 		/* OpenGL context setup */
 		win.makeContextCurrent()
-        glfw.SwapInterval(1) // vsync enabled
-        fmt.Println("vsync set enabled")
+		glfw.SwapInterval(1) // vsync enabled
+		fmt.Println("vsync set enabled")
 		glhf.Init()
 		gl.Enable(gl.BLEND)
 		glhf.BlendFunc(glhf.SrcAlpha, glhf.OneMinusSrcAlpha)
@@ -69,9 +69,9 @@ func run() {
 				shouldQuit = true
 			}
 
-            c := &WinCanvas{window: win}
-            c.Clear(White)
-            winConfig.DrawFunc(win, c)
+			c := &WinCanvas{window: win}
+			c.Clear(White)
+			winConfig.DrawFunc(win, c)
 
 			win.glfwWin.SwapBuffers()
 			glfw.PollEvents()

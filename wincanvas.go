@@ -3,7 +3,7 @@ package gfx
 import (
 	"github.com/go-gl/gl/v3.3-core/gl"
 	"github.com/go-gl/mathgl/mgl32"
-	geom "github.com/tadeuszjt/geom/32"
+	"github.com/tadeuszjt/geom/generic"
 )
 
 type WinCanvas struct {
@@ -18,11 +18,11 @@ func (w *WinCanvas) Clear(col Colour) {
 	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 }
 
-func (w *WinCanvas) Size() geom.Vec2 {
+func (w *WinCanvas) Size() geom.Vec2[float32] {
 	return w.window.Size()
 }
 
-func (w *WinCanvas) Draw2DVertexData(data []float32, texID *TexID, mat *geom.Mat3) {
+func (w *WinCanvas) Draw2DVertexData(data []float32, texID *TexID, mat *geom.Mat3[float32]) {
 	tex := w.window.getTexture(texID)
 
 	w.window.w2D.shader.Begin()
@@ -35,7 +35,7 @@ func (w *WinCanvas) Draw2DVertexData(data []float32, texID *TexID, mat *geom.Mat
 	if mat != nil {
 		w.setMatrix2D(*mat)
 	} else {
-		w.setMatrix2D(geom.Mat3Identity())
+		w.setMatrix2D(geom.Mat3Identity[float32]())
 	}
 
 	w.window.w2D.slice.SetLen(len(data) / 8)
@@ -44,7 +44,7 @@ func (w *WinCanvas) Draw2DVertexData(data []float32, texID *TexID, mat *geom.Mat
 	w.window.w2D.slice.Draw()
 }
 
-func (w *WinCanvas) Draw3DVertexData(data []float32, texID *TexID, mat *geom.Mat4) {
+func (w *WinCanvas) Draw3DVertexData(data []float32, texID *TexID, mat *geom.Mat4[float32]) {
 	gl.Enable(gl.DEPTH_TEST)
 	tex := w.window.getTexture(texID)
 
@@ -56,7 +56,7 @@ func (w *WinCanvas) Draw3DVertexData(data []float32, texID *TexID, mat *geom.Mat
 	defer w.window.w3D.shader.End()
 
 	if mat == nil {
-		w.setMatrix3D(geom.Mat4Identity())
+		w.setMatrix3D(geom.Mat4Identity[float32]())
 	} else {
 		w.setMatrix3D(*mat)
 	}
@@ -72,11 +72,11 @@ func (w *WinCanvas) getWindow() *Win {
 	return w.window
 }
 
-func (w *WinCanvas) setMatrix2D(m geom.Mat3) {
+func (w *WinCanvas) setMatrix2D(m geom.Mat3[float32]) {
 	frameSize := w.Size()
 	worldToGL := geom.Mat3Camera2D(
 		geom.RectOrigin(frameSize.X, frameSize.Y),
-		geom.RectCentred(2, -2),
+		geom.RectCentred[float32](2, -2),
 	)
 	m = worldToGL.Product(m)
 
@@ -87,7 +87,7 @@ func (w *WinCanvas) setMatrix2D(m geom.Mat3) {
 	})
 }
 
-func (w *WinCanvas) setMatrix3D(m geom.Mat4) {
+func (w *WinCanvas) setMatrix3D(m geom.Mat4[float32]) {
 	w.window.w3D.shader.SetUniformAttr(0, mgl32.Mat4{
 		m[0], m[4], m[8], m[12],
 		m[1], m[5], m[9], m[13],

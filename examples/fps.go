@@ -3,13 +3,14 @@ package main
 import (
 	"fmt"
 	"github.com/go-gl/glfw/v3.3/glfw"
-	"github.com/tadeuszjt/geom/32"
+	"github.com/tadeuszjt/geom/generic"
 	"github.com/tadeuszjt/gfx"
+	"math"
 )
 
 func playerUpdate() {
 	forward := geom.Vec3NormPitchYaw(player.pitch, player.bearing)
-	right := geom.Vec3NormPitchYaw(0, player.bearing.Plus(geom.Angle90Deg))
+	right := geom.Vec3NormPitchYaw(0, player.bearing+(math.Pi/2))
 
 	if keys.w {
 		player.position.PlusEquals(forward.ScaledBy(playerSpeed))
@@ -31,13 +32,13 @@ const (
 )
 
 var (
-	mouseWin geom.Vec2
+	mouseWin geom.Vec2[float32]
 	player   = struct {
-		position geom.Vec3
-		bearing  geom.Angle
-		pitch    geom.Angle
+		position geom.Vec3[float32]
+		bearing  float32
+		pitch    float32
 	}{
-		position: geom.Vec3{0, 0, -10},
+		position: geom.Vec3[float32]{0, 0, -10},
 		pitch:    0,
 		bearing:  0,
 	}
@@ -59,7 +60,7 @@ func draw(w *gfx.Win, c gfx.Canvas) {
 	size := w.Size()
 	ar := size.X / size.Y
 	near := float32(0.1)
-	perspective := geom.Mat4Perspective(-ar*near, ar*near, -near, near, near, 1000).Product(geom.Mat4Scalar(-1, 1, -1))
+	perspective := geom.Mat4Perspective(-ar*near, ar*near, -near, near, near, 1000).Product(geom.Mat4Scalar[float32](-1, 1, -1))
 
 	// 2.) Translate 'world by opposite of player position
 	translation := geom.Mat4Translation(player.position.ScaledBy(-1))
@@ -71,9 +72,9 @@ func draw(w *gfx.Win, c gfx.Canvas) {
 	// 3.) Sequence transformations
 	view := perspective.Product(rx).Product(ry).Product(translation)
 
-	gfx.Draw3DArrow(c, geom.Vec3{}, geom.Vec3{3, 0, 0}, gfx.Red, 2, view)
-	gfx.Draw3DArrow(c, geom.Vec3{}, geom.Vec3{0, 3, 0}, gfx.Green, 2, view)
-	gfx.Draw3DArrow(c, geom.Vec3{}, geom.Vec3{0, 0, 3}, gfx.Blue, 2, view)
+	gfx.Draw3DArrow(c, geom.Vec3[float32]{}, geom.Vec3[float32]{3, 0, 0}, gfx.Red, 2, view)
+	gfx.Draw3DArrow(c, geom.Vec3[float32]{}, geom.Vec3[float32]{0, 3, 0}, gfx.Green, 2, view)
+	gfx.Draw3DArrow(c, geom.Vec3[float32]{}, geom.Vec3[float32]{0, 0, 3}, gfx.Blue, 2, view)
 }
 
 func mouse(w *gfx.Win, ev gfx.MouseEvent) {
@@ -81,9 +82,16 @@ func mouse(w *gfx.Win, ev gfx.MouseEvent) {
 	case gfx.MouseScroll:
 	case gfx.MouseMove:
 		{
-			player.bearing.PlusEquals(geom.MakeAngle(e.Position.X * playerLookSensitivity))
-			player.pitch.MinusEquals(geom.MakeAngle(e.Position.Y * playerLookSensitivity))
-			player.pitch.Clamp(-geom.Angle90Deg, geom.Angle90Deg)
+			player.bearing += e.Position.X * playerLookSensitivity
+			player.pitch += e.Position.Y * playerLookSensitivity
+
+			if player.pitch > (math.Pi / 2) {
+				player.pitch = math.Pi / 2
+			}
+			if player.pitch < (-math.Pi / 2) {
+				player.pitch = -math.Pi / 2
+			}
+
 			w.GetGlfwWindow().SetCursorPos(0, 0)
 		}
 	case gfx.MouseButton:

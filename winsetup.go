@@ -20,7 +20,6 @@ func (w *Win) createGlfwWindow(c WinConfig) error {
 	glfw.WindowHint(glfw.OpenGLProfile, glfw.OpenGLCoreProfile)
 	glfw.WindowHint(glfw.OpenGLForwardCompatible, glfw.True)
 
-
 	var err error
 	w.glfwWin, err = glfw.CreateWindow(c.Width, c.Height, c.Title, nil, nil)
 	return err
