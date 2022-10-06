@@ -24,6 +24,40 @@ func DrawRect(c Canvas, texID *TexID, col Colour, rect, texRect geom.Rect[float3
 	c.Draw2DVertexData(data[:], texID, nil)
 }
 
+func Draw2DArrow(c Canvas, start, end geom.Vec2[float32], colour Colour, scale float32, view geom.Mat3[float32]) {
+	headLen := scale * 2
+	tailWidth := scale / 3
+
+	delta := end.Minus(start)
+	rot := geom.Mat3Rotation(delta.Theta())
+
+	headData := []float32{
+		0, 0, 0, 0, colour.R, colour.G, colour.B, colour.A,
+		-1, -1, 0, 0, colour.R, colour.G, colour.B, colour.A,
+		-1, 1, 0, 0, colour.R, colour.G, colour.B, colour.A,
+	}
+
+	headScale := geom.Mat3Scalar(headLen, scale)
+	headModel := geom.Mat3Translation(end).Product(rot).Product(headScale)
+	headMat := view.Product(headModel)
+	c.Draw2DVertexData(headData, nil, &headMat)
+
+	tailData := []float32{
+		0, 1, 0, 0, colour.R, colour.G, colour.B, colour.A,
+		0, -1, 0, 0, colour.R, colour.G, colour.B, colour.A,
+		1, 1, 0, 0, colour.R, colour.G, colour.B, colour.A,
+
+		0, -1, 0, 0, colour.R, colour.G, colour.B, colour.A,
+		1, 1, 0, 0, colour.R, colour.G, colour.B, colour.A,
+		1, -1, 0, 0, colour.R, colour.G, colour.B, colour.A,
+	}
+
+	tailScale := geom.Mat3Scalar(delta.Len() - headLen, tailWidth)
+	tailModel := geom.Mat3Translation(start).Product(rot).Product(tailScale)
+	tailMat := view.Product(tailModel)
+	c.Draw2DVertexData(tailData, nil, &tailMat)
+}
+
 func Draw3DArrow(c Canvas, start, end geom.Vec3[float32], colour Colour, scale float32, view geom.Mat4[float32]) {
 	headLength := 1. * scale
 	headWidth := 0.3 * scale

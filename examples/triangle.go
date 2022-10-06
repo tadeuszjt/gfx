@@ -30,6 +30,6 @@ func main() {
 		Width:    width,
 		Height:   height,
 		DrawFunc: draw,
-		Title:    "Test",
+		Title:    "Triangle",
 	})
 }
