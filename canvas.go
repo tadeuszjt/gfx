@@ -1,7 +1,7 @@
 package gfx
 
 import (
-	geom "github.com/tadeuszjt/geom/generic"
+	"github.com/tadeuszjt/geom/generic"
 )
 
 type Canvas interface {
@@ -52,7 +52,7 @@ func Draw2DArrow(c Canvas, start, end geom.Vec2[float32], colour Colour, scale f
 		1, -1, 0, 0, colour.R, colour.G, colour.B, colour.A,
 	}
 
-	tailScale := geom.Mat3Scalar(delta.Len() - headLen, tailWidth)
+	tailScale := geom.Mat3Scalar(delta.Len()-headLen, tailWidth)
 	tailModel := geom.Mat3Translation(start).Product(rot).Product(tailScale)
 	tailMat := view.Product(tailModel)
 	c.Draw2DVertexData(tailData, nil, &tailMat)
@@ -138,7 +138,7 @@ func DrawSprite(c Canvas, ori geom.Ori2[float32], rec geom.Rect[float32], col Co
 	m := ori.Mat3Transform()
 	verts := rec.Verts()
 	for i := range verts {
-		verts[i] = m.TimesVec2(verts[i], 1).Vec2()
+		verts[i] = m.TimesVec2(verts[i], 1)
 	}
 
 	for _, j := range [6]int{0, 1, 2, 0, 2, 3} {
